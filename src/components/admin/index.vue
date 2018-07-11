@@ -23,8 +23,7 @@
 		<div class="admin-left">
 			<div class="user-info" style="background-image: url(../../src/assets/images/page/admin/head.jpg)">
 				<div class="info">
-					<p>用户名</p>
-					<p>客户基本信息</p>
+					<p>{{ adminInfo.userName }}</p>
 				</div>
 			</div>
 			<div class="menu">
@@ -44,6 +43,8 @@
 </template>
 
 <script>
+	import {mapActions, mapState} from 'vuex';
+
     export default {
         name: 'admin',
         data(){
@@ -72,7 +73,10 @@
         			}
         		]
         	}
-        }
+        },
+        computed: {
+			...mapState(['adminInfo']),
+		}
     }
 </script>
 

@@ -21,11 +21,11 @@
 					<div class="title">用户登录</div>
 					<div class="item">
 						<i class="username-icon icon login-icon"></i>
-						<input type="text" class="input-item" placeholder="请输入用户名" />
+						<input type="text" v-model="userName" class="input-item" placeholder="请输入用户名" />
 					</div>
 					<div class="item">
 						<i class="pwa-icon icon login-icon"></i>
-						<input type="text" class="input-item" placeholder="请输入密码" />
+						<input type="text" v-model="password" class="input-item" placeholder="请输入密码" />
 					</div>
 					<input class="submit" type="submit" value="登录" />
 				</form>
@@ -68,20 +68,89 @@
 </template>
 
 <script>
+	import {login, permission} from '../../api/getData';
+	import {mapActions, mapState} from 'vuex';
+
     export default {
         name: 'login',
+        data(){
+        	return {
+        		userName: '',
+        		password: ''
+        	}
+        },
+        computed: {
+			...mapState(['adminInfo']),
+		},
         methods: {
-        	submit(){
-	        	layer.tips('下', '.submit', {
-					tips: 1
-				});
+        	...mapActions(['getAdminData']),
+        	async submit(){
+        		if(!this.userName) {
+        			layer.tips('用户名不能为空', '.username-icon', {
+						tips: 1,
+						tipsMore: true
+					});
+        		}
 
-        		/*
-        		layer.msg('加载中', {
-					icon: 16
-					,shade: 0.3
-				});
-				*/
+        		if(!this.password) {
+        			layer.tips('密码不能为空不能为空', '.pwa-icon', {
+						tips: 1,
+						tipsMore: true
+					});
+        		}
+
+        		if(this.userName && this.password){
+	        		const l = layer.msg('登录中...', {
+						icon: 16,
+						shade: 0.5,
+						time: 0
+					});
+
+					const loginRes = await login({userName: this.userName, password: this.password});
+
+					if(loginRes.statusError && loginRes.status != 200){
+						layer.close(l);
+						layer.msg('出现异常');
+						return false;
+					}
+
+					if(loginRes.responseCode == '20000'){
+						const userId = loginRes.data && loginRes.data.userId;
+
+						if(userId){
+							const permissionRes = await permission(loginRes.data.userId);
+
+							if(permissionRes.statusError && permissionRes.status != 200){
+								layer.close(l);
+								layer.msg('出现异常');
+								return false;
+							}
+
+							if(permissionRes.responseCode == '20000'){
+								this.getAdminData({
+				        			userId: loginRes.data.userId,
+				        			userName: loginRes.data.userName,
+									permissions: permissionRes.data.permissions
+				        		});
+
+								layer.close(l);
+								layer.msg('登录成功');
+								setTimeout(() => {
+									this.$router.push('/admin');
+								}, 1000);
+							}else{
+								layer.close(l);
+								layer.msg('数据异常, 请刷新');
+							}
+						}else{
+							layer.close(l);
+							layer.msg('数据异常, 请刷新');
+						}
+					}else{
+						layer.close(l);
+						layer.msg(loginRes.msg);
+					}
+				}
         	}
         }
     }

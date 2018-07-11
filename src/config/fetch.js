@@ -16,7 +16,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 		}
 	}
 
-	if (window.fetch && method == 'fetch') {
+	if (window.fetch && method == 'fetch' && 0) {
 		let requestConfig = {
 			credentials: 'include',
 			method: type,
@@ -52,7 +52,12 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 
 			let sendData = '';
 			if (type == 'POST') {
-				sendData = JSON.stringify(data);
+				let params = [];
+				for (var key in data){
+					params.push(key + '=' + data[key]);
+				}
+
+				sendData = params.join('&');
 			}
 
 			requestObj.open(type, url, true);
@@ -68,7 +73,8 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 						}
 						resolve(obj)
 					} else {
-						reject(requestObj)
+						requestObj.statusError = true;
+						resolve(requestObj)
 					}
 				}
 			}

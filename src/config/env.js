@@ -7,7 +7,7 @@
  *
  */
 
-let baseUrl = 'http://localhost:3000/api/';
+let baseUrl = 'http://localhost:3000';
 let routerMode = 'history';
 
 if (process.env.NODE_ENV == 'development') {
