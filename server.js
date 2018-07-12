@@ -79,6 +79,17 @@ app.get('/web/user/B2FCDCFBFCDCBAB5/permission', (req, res) => {
 	})
 })
 
+// 获取用户信息
+app.get('/web/user/info', (req, res) => {
+	res.json({
+        responseCode: 20000,
+        data: {
+        	userId: 'B2FCDCFBFCDCBAB5',
+	        userName: 'spen'
+        }
+    })
+})
+
 app.listen(3000);
 
 

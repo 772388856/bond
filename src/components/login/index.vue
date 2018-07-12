@@ -83,7 +83,7 @@
 			...mapState(['adminInfo']),
 		},
         methods: {
-        	...mapActions(['getAdminData']),
+        	...mapActions(['setAdminData']),
         	async submit(){
         		if(!this.userName) {
         			layer.tips('用户名不能为空', '.username-icon', {
@@ -93,7 +93,7 @@
         		}
 
         		if(!this.password) {
-        			layer.tips('密码不能为空不能为空', '.pwa-icon', {
+        			layer.tips('密码不能为空', '.pwa-icon', {
 						tips: 1,
 						tipsMore: true
 					});
@@ -127,7 +127,7 @@
 							}
 
 							if(permissionRes.responseCode == '20000'){
-								this.getAdminData({
+								this.setAdminData({
 				        			userId: loginRes.data.userId,
 				        			userName: loginRes.data.userName,
 									permissions: permissionRes.data.permissions

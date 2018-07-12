@@ -1,5 +1,5 @@
 <template>
-	<div class="admin">
+	<div class="admin" v-if="!load">
 		<!-- 顶部 -->
 		<div class="header-two">
 			<a href="javascript:;" class="left fl link-default">
@@ -44,38 +44,86 @@
 
 <script>
 	import {mapActions, mapState} from 'vuex';
+	import {permission} from '../../api/getData';
 
     export default {
         name: 'admin',
         data(){
         	return {
-        		menuList: [
-        			{
-        				name: '优选基金管理',
-        				href: '/admin/optimization'
-        			},
-        			{
-        				name: '基金组合管理',
-        				href: '/admin/combination'
-        			},
-        			{
-        				name: '基金组合标签管理',
-        				href: '/admin/label'
-        			},
-        			{
-        				name: '黑名单管理',
-        				href: '/admin/blacklist',
-        				num: 99
-        			},
-        			{
-        				name: '基金预警管理',
-        				href: '/admin/warning'
-        			}
-        		]
+        		menuList: [],
+        		load: true,
+        		layerLoad: ''
         	}
         },
         computed: {
 			...mapState(['adminInfo']),
+		},
+		created(){
+			this.layerLoad = layer.msg('初始化数据中，请稍等...', {
+				icon: 16,
+				shade: 0.3,
+				time: 0
+			});
+
+			setTimeout(() => {
+				layer.close(this.layerLoad);
+				this.load = false;
+			}, 2000);
+		},
+		mounted(){
+			this.getAdminData(() => {
+				this.getPermissions();
+			});
+		},
+		methods: {
+			...mapActions(['setAdminData','getAdminData']),
+			async getPermissions(){
+				const permissionRes = await permission(this.adminInfo.userId);
+
+				if(permissionRes.statusError && permissionRes.status != 200){
+					layer.msg('出现异常');
+					return false;
+				}
+
+				if(permissionRes.responseCode == '20000'){
+					this.setAdminData({
+						permissions: permissionRes.data.permissions
+	        		});
+	        		this.setMenu();
+				}else{
+					this.$router.push('/login');
+				}
+			},
+			setMenu(){
+				this.adminInfo.permissions.forEach((list, index) => {
+					let href;
+
+					switch(list.permissionId) {
+						// 优选基金管理
+						case '1':
+							href = '/admin/optimization';
+							break;
+						// 基金组合管理
+						case '2':
+							href = '/admin/combination';
+							break;
+						// 基金组合标签管理
+						case '3':
+							href = '/admin/label';
+							break;
+						// 黑名单管理
+						case '4':
+							href = '/admin/blacklist';
+							break;
+						// 基金预警管理
+						case '5':
+							href = '/admin/warning';
+							break;
+					}
+
+					this.menuList.push({name: list.permissionName, href: href});
+				});
+			}
 		}
     }
 </script>
@@ -250,9 +298,10 @@
 			position: absolute;
 			top: 60px;
 			left: 235px;
-			right: 24px;
+			right: 0;
 			bottom: 0;
 			padding-bottom: 20px;
+			padding-right: 20px;
 			min-width: 739px;
 		    overflow: hidden;
 		    overflow-y: auto;
@@ -374,6 +423,16 @@
 			}
 			.item-1 {
 				background: #fec006;
+
+				.file {
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					z-index: 2;
+					opacity: 0;
+				}
 			}
 			.item-2 {
 				background: #2095f2;

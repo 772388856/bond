@@ -17,9 +17,11 @@
 					<td>数据数据数据数据数据数据</td>
 					<td>数据数据数据数据数据数据</td>
 					<td>
-						<a href="javascript:;" class="del admin-icon"></a>
+						<a href="javascript:;" class="del admin-icon" :class="{
+							on: showDel
+						}" @click="delFn"></a>
 					</td>
-				</tr>				
+				</tr>
 			</tbody>
 		</table>
 		<div class="page">
@@ -40,11 +42,21 @@
 
 <script>
     export default {
+    	props: ['showDel'],
        	data(){
        		return {
        			table: {
        				head: ['基金代码', '基金名称', '基金类别', '基金特征', '操作']
        			}
+       		}
+       	},
+       	methods: {
+       		delFn(){
+       			if(!this.showDel) return false;
+
+       			layer.confirm('您是否删除本条目？', {
+					btn: ['确定','取消']
+				})
        		}
        	}
     }
@@ -102,7 +114,10 @@
 			display: inline-block;
 			width: 40px;
 			height: 40px;
-			background-position: 0px -120px;
+			background-position: 0px -160px;
+			&.on {
+				background-position: 0px -120px;
+			}
 		}
 		.page {
 			padding: 10px 20px;
