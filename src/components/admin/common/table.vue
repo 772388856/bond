@@ -3,30 +3,25 @@
 		<table>
 			<thead>
 				<tr>
-					<td>基金代码</td>
-					<td>基金名称</td>
-					<td>基金类别</td>
-					<td>基金特征</td>
+					<td v-for="(list,index) in title">{{ list }}</td>
 					<td>操作</td>
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="(list,index) in 10">
-					<td>数据{{ list }}</td>
-					<td>数据数据数据数据数据数据</td>
-					<td>数据数据数据数据数据数据</td>
-					<td>数据数据数据数据数据数据</td>
+				<tr v-for="(list,index) in lists">
+					<td v-for="item in list">{{ item }}</td>
 					<td>
-						<a href="javascript:;" class="del admin-icon" :class="{
+						<a href="javascript:;" v-if="typeof showDel != 'undefined'" class="del admin-icon" :class="{
 							on: showDel
-						}" @click="delFn"></a>
+						}" @click="delFn(list)"></a>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 		<div class="page">
-			<a href="javascript:;" class="up page-item">< 上一页</a>
+			<a href="javascript:;" class="up page-item" v-if="page > 1" @click="switchPage(0, 'up')">< 上一页</a>
 			<span class="num">
+				<!--
 				<a href="javascript:;" class="page-item">1</a>
 				<span class="spot">...</span>
 				<a href="javascript:;" class="page-item active">14</a>
@@ -34,29 +29,80 @@
 				<a href="javascript:;" class="page-item">16</a>
 				<span class="spot">...</span>
 				<a href="javascript:;" class="page-item">98</a>
+				-->
+				<a href="javascript:;" @click="switchPage(num)" class="page-item" :class="{active: num==page}" v-for="num in indexs">{{ num }}</a>
 			</span>
-			<a href="javascript:;" class="down page-item">下一页 ></a>
+			<a href="javascript:;" class="down page-item" v-if="page < countNum" @click="switchPage(0, 'down')">下一页 ></a>
 		</div>
 	</div>
 </template>
 
 <script>
     export default {
-    	props: ['showDel'],
+    	props: ['title','lists','showDel','countNum','page'],
        	data(){
        		return {
-       			table: {
-       				head: ['基金代码', '基金名称', '基金类别', '基金特征', '操作']
-       			}
+       			indexs: []
        		}
        	},
+       	mounted(){
+       		this.pageHandle();
+       	},
        	methods: {
-       		delFn(){
+       		delFn(val){
        			if(!this.showDel) return false;
 
-       			layer.confirm('您是否删除本条目？', {
-					btn: ['确定','取消']
+       			let l = layer.confirm('您是否删除本条目？', {
+					btn: ['确定','取消'],
+					title: false,
+					skin: 'layui-layer-molv' 
+				}, () => {
+					this.$emit('updateData', obj => {
+						obj.removeData(val);
+					})
 				})
+       		},
+       		pageHandle(){
+       			let left = 1;
+				let right = this.countNum;
+				let ar = [];
+				if(this.countNum>= 5){
+					if(this.page > 3 && this.page < this.countNum-2){
+						left = this.page - 2
+						right = this.page + 2
+					}else{
+					    if(this.page<=3){
+					        left = 1
+					        right = 5
+					    }else{
+					        right = this.countNum
+					        left = this.countNum -4
+					    }
+					}
+				}
+		        while (left <= right){
+		            ar.push(left)
+		            left ++
+		        }
+		        this.indexs = ar;
+       		},
+       		switchPage(n, type){
+       			let num = n;
+       			if(type == 'down'){ // 下一页
+       				num = this.page+1;
+       			}else if(type == 'up'){ // 上一页
+       				num = this.page-1;
+       			}
+
+       			this.$emit('updateData', obj => {
+       				obj.page = num;
+       				obj.filterHandle();
+       			});
+       		}
+       	},
+       	watch: {
+       		page(){
+       			this.pageHandle();
        		}
        	}
     }

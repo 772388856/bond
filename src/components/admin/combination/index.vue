@@ -21,18 +21,17 @@
 		<div class="admin-box">
 			<box-title title="优选基金搜索"></box-title>
 			<div class="condition-item">
-				<my-select :lists="['规模风格', '规模风格1', '规模风格2', '规模风格3']"></my-select>
-				<my-select :lists="['价值风格', '价值风格1', '价值风格2', '价值风格3']"></my-select>
-				<my-select :lists="['热门主题', '热门主题1', '热门主题2', '热门主题3']"></my-select>
-				<a href="javascript:;" class="condition-search" @click="filterFn">
+				<my-select text="风险偏好" keyVal="riskPrefer" :lists="riskPrefer" @updateData="updateData" :checkbox="true"></my-select>
+				<my-select text="流动性偏好" keyVal="fluidityPrefer" :lists="fluidityPrefer" @updateData="updateData" :checkbox="true"></my-select>
+				<a href="javascript:;" class="condition-search" @click="filterHandle">
 					<i class="admin-icon"></i>
 				</a>
-				<a href="javascript:;" class="condition-reset">重置所有条件</a>
+				<a href="javascript:;" class="condition-reset" @click="reset">重置所有条件</a>
 			</div>
 		</div>
 
 		<div class="admin-box">
-			<box-title title="共找到XX个符合条件的结果"></box-title>
+			<box-title :title="`共找到${count}个符合条件的结果`"></box-title>
 			<div class="list-tab clearfix">
 				<div class="left fl">
 					<div class="text fl">基金代码搜索</div>
@@ -45,7 +44,13 @@
 					<a href="javascript:;" class="btn" download="test">表单下载</a>
 				</div>
 			</div>
-			<my-table :showDel="showDel"></my-table>
+			<my-table 
+				:title="['基金组合代码', '组合名称']" 
+				:lists="fundgroupData" :showDel="showDel"
+				:countNum="countNum"
+				:page="page"
+				@updateData="updateData"
+			></my-table>
 		</div>
 	</div>
 </template>
@@ -56,6 +61,8 @@
 	import boxTitle from '../common/boxTitle'
 	import mySelect from '../common/select'
 	import myTable from '../common/table'
+	import {fundgroupCondition, fundgroups} from '../../../api/getData';
+	import {stateHandle} from '../../../config/tool';
 
     export default {
         name: 'optimization',
@@ -64,27 +71,99 @@
         	return {
         		showDel: false,
         		codeVal: '',
-        		load: true
+        		load: true,
+        		riskPrefer: {
+        			default: [],
+        			list: []
+        		},
+        		fluidityPrefer: {
+        			default: [],
+        			list: []
+        		},
+        		pageSize: 10,
+        		page: 1,
+        		countNum: 0,
+        		count: 0,
+        		fundgroupData: []
         	}
         },
         created(){
-			this.layerLoad = layer.msg('加载数据中...', {
+			const layerLoad = layer.msg('加载数据中...', {
 				icon: 16,
 				shade: 0,
 				time: 0
 			});
 
-			setTimeout(() => {
-				layer.close(this.layerLoad);
-				this.load = false;
-			}, 1000);
+        	this.getData(() => {
+    			this.filterHandle(() => {
+    				layer.close(layerLoad);
+        			this.load = false;
+    			});
+        	});
 		},
         methods: {
-        	filterFn(){
-        		layer.msg('搜索中', {
-					icon: 16,
-					shade: 0.5
+        	// 初始化数据
+			async getData(callback){
+				const res = await fundgroupCondition();
+
+				stateHandle({
+					data: res,
+					codeSuccess: () => {
+						this.riskPrefer.list = res.data.riskPrefer;
+						this.fluidityPrefer.list = res.data.fluidityPrefer;
+					}
 				});
+
+				callback && callback();
+			},
+        	async filterHandle(callback, config={}){
+        		let l;
+
+        		if(config.tips !== false){
+	        		l = layer.msg('搜索中', {
+						icon: 16,
+						shade: 0.5,
+						time: 0
+					});
+				}
+				const str = {
+					page: this.page,
+					pageSize: this.pageSize
+				};
+
+				if(this.riskPrefer.default.length){
+					let topicArr = [];
+
+					this.riskPrefer.default.forEach((list, index) => {
+						topicArr.push(list.id);
+					});
+					str.riskPrefer = topicArr;
+				}
+				if(this.fluidityPrefer.default.length){
+					let topicArr = [];
+
+					this.fluidityPrefer.default.forEach((list, index) => {
+						topicArr.push(list.id);
+					});
+					str.fluidityPrefer = topicArr;
+				}
+				if(this.codeVal){
+					str.code = this.codeVal;
+				}
+
+				const res = await fundgroups(str);
+
+				stateHandle({
+					data: res,
+					codeSuccess: () => {
+						this.fundgroupData = res.data;
+						this.countNum = Math.ceil(res.count / this.pageSize);
+						this.count = res.count;
+						config.tips !== false && layer.close(l);
+					}
+				});
+
+				typeof callback == 'function' && callback();
         	},
         	searchCode(){
         		if(!this.codeVal){
@@ -94,10 +173,15 @@
         			return false;
         		}
 
-        		layer.msg('搜索中', {
-					icon: 16,
-					shade: 0.5
-				});
+        		this.filterHandle();
+        	},
+        	updateData(callback){
+        		callback && callback(this);
+        	},
+        	reset(){
+        		this.riskPrefer.default = [];
+        		this.fluidityPrefer.default = [];
+        		this.codeVal = '';
         	}
         }
     }

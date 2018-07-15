@@ -300,14 +300,14 @@
 			left: 235px;
 			right: 0;
 			bottom: 0;
-			padding-bottom: 20px;
+			padding-bottom: 5px;
 			padding-right: 20px;
 			min-width: 739px;
 		    overflow: hidden;
 		    overflow-y: auto;
 		}
 		.admin-box {
-			margin-top: 15px;
+			margin-bottom: 15px;
 			background: #FFF;
 		}
 		.condition-item {
@@ -315,7 +315,7 @@
 			padding-top: 0;
 
 			.admin-select {
-				margin-right: 3px;
+				margin-right: 10px;
 			}
 		}
 		.condition-search {
@@ -329,7 +329,6 @@
 			border-radius: 5px;
 			vertical-align: bottom;
 			box-shadow: 0 2px 0 #c38a3a;
-			margin-left: 5px;
 
 			i {
 				position: absolute;
@@ -410,6 +409,7 @@
 			}
 		}
 		.top-label {
+			margin-bottom: 15px;
 			.item {
 				width: 333px;
 				height: 108px;

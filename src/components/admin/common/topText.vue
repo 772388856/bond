@@ -9,6 +9,7 @@
 		font-size: 22px;
 		background: #dfe0e6;
 		padding: 10px 14px;
+		margin-bottom: 15px;
 
 		span {
 			color: #db5565;

@@ -90,6 +90,193 @@ app.get('/web/user/info', (req, res) => {
     })
 })
 
+// 优选基金（初始化）
+app.get('/web/preferfund/condition', (req, res) => {
+	res.json({
+        responseCode: 20000,
+        msg: "",
+        data: {
+	       "scala":[
+	           {
+	               "id":"B2FCDCFBFCDCBAB1",
+	               "name":"规模风格1"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB2",
+	               "name":"规模风格2"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB3",
+	               "name":"规模风格3"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB4",
+	               "name":"规模风格4"
+	           }
+	       ],
+	       "value":[
+	           {
+	               "id":"B2FCDCFBFCDCBAB1",
+	               "name":"价值风格1"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB2",
+	               "name":"价值风格2"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB3",
+	               "name":"价值风格3"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB4",
+	               "name":"价值风格4"
+	           }
+	       ],
+	        "topic":[
+	           {
+	               "id":"B2FCDCFBFCDCBAB1",
+	               "name":"热门主题1"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB2",
+	               "name":"热门主题2"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB3",
+	               "name":"热门主题3"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB4",
+	               "name":"热门主题4"
+	           }
+	       ]
+        }
+    })
+})
+
+// 优选基金 （ 获取用户上次选择（输入）的条件 ）
+app.get('/web/preferfund/condition/select', (req, res) => {
+	res.json({
+        responseCode: 20000,
+		msg: "",
+		data: {
+			"scala": {
+               "id":"B2FCDCFBFCDCBAB1",
+               "name":"规模风格1"
+           },
+	       "value": {
+               "id":"B2FCDCFBFCDCBAB1",
+               "name":"价值风格1"
+           },
+	        "topic": [
+	        	{
+	               "id":"B2FCDCFBFCDCBAB4",
+	               "name":"热门主题4"
+           		},
+           		{
+	               "id":"B2FCDCFBFCDCBAB3",
+	               "name":"热门主题3"
+	            }
+           ]
+		}
+    })
+})
+
+// 优选基金 （查询接口）
+app.get('/web/preferfunds', (req, res) => {
+	const arr = [];
+
+	for(let i = 0; i < 10; i++){
+		arr.push({
+           "code":`xxx_${i}_page${req.query.page}`,
+           "name":`xxx_${i}_page${req.query.page}`,
+           "type":`xxx_${i}_page${req.query.page}`,
+           "feture":`xxx_${i}_page${req.query.page}`,
+		});
+	}
+
+	res.json({
+        responseCode: 20000,
+		msg: "",
+		count: 103,
+		data: arr
+    })
+})
+
+// 优选基金 （删除基金）
+app.get('/web/preferfund/*', (req, res) => {
+	res.json({
+		responseCode: 20000,
+		msg: "删除成功",
+		data: {}
+	})
+})
+
+// 基金组合管理（初始化）
+app.get('/web/fundgroup/condition', (req, res) => {
+	res.json({
+        responseCode: 20000,
+        msg: "",
+        data: {
+	       "riskPrefer":[
+	           {
+	               "id":"B2FCDCFBFCDCBAB1",
+	               "name":"xx1"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB2",
+	               "name":"xx2"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB3",
+	               "name":"xx3"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB4",
+	               "name":"xx3"
+	           }
+	       ],
+	       "fluidityPrefer":[
+	           {
+	               "id":"B2FCDCFBFCDCBAB1",
+	               "name":"oo1"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB2",
+	               "name":"oo2"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB3",
+	               "name":"oo3"
+	           },
+	           {
+	               "id":"B2FCDCFBFCDCBAB4",
+	               "name":"oo4"
+	           }
+	       ]
+        }
+    })
+})
+
+// 基金组合管理 （查询接口）
+app.get('/web/fundgroups', (req, res) => {
+	const arr = [];
+
+	for(let i = 0; i < 10; i++){
+		arr.push({
+           "id":`xxx_${i}_page${req.query.page}`,
+           "name":`xxx_${i}_page${req.query.page}`
+		});
+	}
+
+	res.json({
+        responseCode: 20000,
+		msg: "",
+		count: 150,
+		data: arr
+    })
+})
+
 app.listen(3000);
 
 

@@ -79,9 +79,6 @@
         		password: ''
         	}
         },
-        computed: {
-			...mapState(['adminInfo']),
-		},
         methods: {
         	...mapActions(['setAdminData']),
         	async submit(){
@@ -102,7 +99,6 @@
         		if(this.userName && this.password){
 	        		const l = layer.msg('登录中...', {
 						icon: 16,
-						shade: 0.5,
 						time: 0
 					});
 
@@ -118,30 +114,16 @@
 						const userId = loginRes.data && loginRes.data.userId;
 
 						if(userId){
-							const permissionRes = await permission(loginRes.data.userId);
+							this.setAdminData({
+			        			userId: loginRes.data.userId,
+			        			userName: loginRes.data.userName
+			        		});
 
-							if(permissionRes.statusError && permissionRes.status != 200){
-								layer.close(l);
-								layer.msg('出现异常');
-								return false;
-							}
-
-							if(permissionRes.responseCode == '20000'){
-								this.setAdminData({
-				        			userId: loginRes.data.userId,
-				        			userName: loginRes.data.userName,
-									permissions: permissionRes.data.permissions
-				        		});
-
-								layer.close(l);
-								layer.msg('登录成功');
-								setTimeout(() => {
-									this.$router.push('/admin');
-								}, 1000);
-							}else{
-								layer.close(l);
-								layer.msg('数据异常, 请刷新');
-							}
+							layer.close(l);
+							layer.msg('登录成功');
+							setTimeout(() => {
+								this.$router.push('/admin');
+							}, 1000);
 						}else{
 							layer.close(l);
 							layer.msg('数据异常, 请刷新');
