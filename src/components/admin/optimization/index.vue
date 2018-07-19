@@ -50,12 +50,14 @@
 				:countNum="countNum"
 				:page="page"
 				@updateData="updateData"
+				:modify="modify"
 			></my-table>
 		</div>
 	</div>
 </template>
 
 <script>
+	import {mapActions, mapState} from 'vuex';
 	import topTitle from '../common/topTitle'
 	import topText from '../common/topText'
 	import boxTitle from '../common/boxTitle'
@@ -87,9 +89,13 @@
         		pageSize: 10,
         		page: 1,
         		countNum: 0,
-        		count: 0
+        		count: 0,
+        		modify: false
         	}
         },
+        computed: {
+			...mapState(['adminInfo']),
+		},
         created(){
         	const layerLoad = layer.msg('加载数据中...', {
 				icon: 16,
@@ -105,6 +111,13 @@
         			});
         		});
         	});
+		},
+		mounted(){
+			this.adminInfo.permissions.forEach((list, index) => {
+				if(list.permissionId == '1' && list.modify){
+					this.modify = true;
+				}
+			});
 		},
 		methods: {
 			// 初始化数据

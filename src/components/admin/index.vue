@@ -38,7 +38,7 @@
 
 		<!-- 右侧 -->
 		<keep-alive>
-		    <router-view class="admin-right"></router-view>
+	    	<router-view class="admin-right"></router-view>
 		</keep-alive>
 	</div>
 </template>
@@ -124,6 +124,23 @@
 
 					this.menuList.push({name: list.permissonName, href: href});
 				});
+				this.jumpLink();
+			},
+			jumpLink(){
+				let num = 0;
+
+				if(this.$route.path == '/admin'){
+					this.menuList[0] && this.menuList[0].href && this.$router.push(this.menuList[0].href);
+				}
+
+				this.menuList.forEach((list, index) => {
+					if(list.href.indexOf(this.$route.path) != -1){
+						num++;
+					}
+				});
+				if(!num){
+					this.menuList[0] && this.menuList[0].href && this.$router.push(this.menuList[0].href);
+				}
 			}
 		}
     }

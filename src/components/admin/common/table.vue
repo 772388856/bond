@@ -4,13 +4,13 @@
 			<thead>
 				<tr>
 					<td v-for="(list,index) in title">{{ list }}</td>
-					<td>操作</td>
+					<td v-if="modify">操作</td>
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-for="(list,index) in lists">
 					<td v-for="item in list">{{ item }}</td>
-					<td>
+					<td v-if="modify">
 						<a href="javascript:;" v-if="typeof showDel != 'undefined'" class="del admin-icon" :class="{
 							on: showDel
 						}" @click="delFn(list)"></a>
@@ -39,7 +39,7 @@
 
 <script>
     export default {
-    	props: ['title','lists','showDel','countNum','page'],
+    	props: ['title','lists','showDel','countNum','page', 'modify'],
        	data(){
        		return {
        			indexs: []

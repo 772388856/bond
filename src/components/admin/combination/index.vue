@@ -12,7 +12,7 @@
 					<input class="file" name="file" type="file" @change="upload" />
 				</form>
 			</a>
-			<a href="javascript:;" class="item-2 item fl" @click="showDel = !showDel">
+			<a href="javascript:;" v-if="modify" class="item-2 item fl" @click="showDel = !showDel">
 				<div>基金组合编辑</div>
 				<div class="icon-box">
 					<i class="icon-2 icon admin-icon"></i>
@@ -52,12 +52,14 @@
 				:countNum="countNum"
 				:page="page"
 				@updateData="updateData"
+				:modify="modify"
 			></my-table>
 		</div>
 	</div>
 </template>
 
 <script>
+	import {mapActions, mapState} from 'vuex';
 	import topTitle from '../common/topTitle'
 	import topText from '../common/topText'
 	import boxTitle from '../common/boxTitle'
@@ -86,9 +88,13 @@
         		page: 1,
         		countNum: 0,
         		count: 0,
-        		fundgroupData: []
+        		fundgroupData: [],
+        		modify: false
         	}
         },
+        computed: {
+			...mapState(['adminInfo']),
+		},
         created(){
 			const layerLoad = layer.msg('加载数据中...', {
 				icon: 16,
@@ -102,6 +108,13 @@
         			this.load = false;
     			});
         	});
+		},
+		mounted(){
+			this.adminInfo.permissions.forEach((list, index) => {
+				if(list.permissionId == '2' && list.modify){
+					this.modify = true;
+				}
+			});
 		},
         methods: {
         	// 初始化数据

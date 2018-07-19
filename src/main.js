@@ -13,12 +13,17 @@ const router = new VueRouter({
 })
 
 // router.beforeEach((to, from, next) => {
-// 	if(router.app.$store.state.adminInfo.userId){
+// 	if(from.path.indexOf('login') != -1){
 // 		next();
 // 	}else{
-// 		next({ path: '/login' });
+// 		console.log(router.app.$store.state.adminInfo, router.app.$store.state.adminInfo.userId)
+// 		if(router.app.$store.state.adminInfo.userId){
+
+// 		}else{
+// 			next();
+// 		}
 // 	}
-// });
+// })
 
 new Vue({
 	router,

@@ -35,8 +35,8 @@ const actions = {
 			commit('saveAdminInfo', res.data);
 			callback && callback();
 		}else{
-			//this.$router.push('/login');
-			throw new Error(res)
+			// 登录失效跳到登录页
+			location.href.indexOf('login') == -1 && (location.href = '/login');
 		}
 	}
 }

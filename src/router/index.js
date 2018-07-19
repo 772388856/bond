@@ -26,7 +26,7 @@ export default [{
     children: [
         {
             path: '',
-            redirect: '/login'
+            redirect: '/admin'
         },
         {
             path: '/login',
@@ -37,10 +37,6 @@ export default [{
             component: admin,
             name: '',
             children: [
-                {
-                    path: '',
-                    redirect: '/admin/optimization'
-                },
                 {
                     path: '/admin/optimization',
                     component: optimization

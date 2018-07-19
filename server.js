@@ -48,32 +48,32 @@ app.get('/web/user/B2FCDCFBFCDCBAB5/permission', (req, res) => {
 	   "data":{
 	       "permissions":[
 	           {
-	               "permissionId":"1",
-	               "permissionName":"优选基金管理",
+	               "permissionId":1,
+	               "permissonName":"优选基金管理",
+	               "view":true,
+	               "modify":true
+	           },
+	           {
+	               "permissionId":2,
+	               "permissonName":"基金组合管理",
 	               "view":true,
 	               "modify":false
 	           },
 	           {
-	               "permissionId":"2",
-	               "permissionName":"基金组合管理",
+	               "permissionId":3,
+	               "permissonName":"基金组合标签管理",
 	               "view":true,
 	               "modify":false
 	           },
 	           {
-	               "permissionId":"3",
-	               "permissionName":"基金组合标签管理",
-	               "view":true,
-	               "modify":false
-	           },
-	           {
-	               "permissionId":"4",
-	               "permissionName":"黑名单管理",
+	               "permissionId":4,
+	               "permissonName":"黑名单管理",
 	               "view":true,
 	               "modify":false
 	           },
 	            {
-	               "permissionId":"5",
-	               "permissionName":"基金预警管理",
+	               "permissionId":5,
+	               "permissonName":"基金预警管理",
 	               "view":true,
 	               "modify":false
 	           }
