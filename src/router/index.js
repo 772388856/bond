@@ -1,5 +1,6 @@
 import App from '../App'
 
+/*
 const admin = r => require.ensure([], () => r(require('../components/admin/')), 'admin')
 const login = r => require.ensure([], () => r(require('../components/login/')), 'login')
 
@@ -8,6 +9,16 @@ const blacklist = r => require.ensure([], () => r(require('../components/admin/b
 const combination = r => require.ensure([], () => r(require('../components/admin/combination/')), 'combination')
 const warning = r => require.ensure([], () => r(require('../components/admin/warning/')), 'warning')
 const label = r => require.ensure([], () => r(require('../components/admin/label/')), 'label')
+*/
+
+import admin from '../components/admin/'
+import login from '../components/login/'
+
+import optimization from '../components/admin/optimization/'
+import blacklist from '../components/admin/blacklist/'
+import combination from '../components/admin/combination/'
+import warning from '../components/admin/warning/'
+import label from '../components/admin/label/'
 
 export default [{
     path: '/',

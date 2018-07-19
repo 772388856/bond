@@ -4,11 +4,13 @@
 
 		<div class="top-label clearfix">
 			<a href="javascript:;" class="item-1 item fl">
-				<div>基金组合上传</div>
-				<div class="icon-box">
-					<i class="icon-1 icon admin-icon"></i>
-				</div>
-				<input class="file" type="file" />
+				<form id="upload" enctype='multipart/form-data'>
+					<div>基金组合上传</div>
+					<div class="icon-box">
+						<i class="icon-1 icon admin-icon"></i>
+					</div>
+					<input class="file" name="file" type="file" @change="upload" />
+				</form>
 			</a>
 			<a href="javascript:;" class="item-2 item fl" @click="showDel = !showDel">
 				<div>基金组合编辑</div>
@@ -61,7 +63,7 @@
 	import boxTitle from '../common/boxTitle'
 	import mySelect from '../common/select'
 	import myTable from '../common/table'
-	import {fundgroupCondition, fundgroups} from '../../../api/getData';
+	import {fundgroupCondition, fundgroups, fundgroupsUpload} from '../../../api/getData';
 	import {stateHandle} from '../../../config/tool';
 
     export default {
@@ -182,6 +184,35 @@
         		this.riskPrefer.default = [];
         		this.fluidityPrefer.default = [];
         		this.codeVal = '';
+        	},
+        	upload(){
+        		const l = layer.msg('文件正在上传中，请稍候', {
+					icon: 16,
+					shade: 0.5,
+					time: 0
+				});
+
+				$.ajax({
+				    url: fundgroupsUpload,
+				    type: 'POST',
+				    cache: false,	
+				    data: new FormData(document.getElementById('upload')),
+				    processData: false,
+				    contentType: false,
+				    dataType:"json",
+				    success: (data) => {
+				        layer.close(l);
+				        if(data.responseCode == '20000'){
+				        	layer.msg('上传成功');
+				        }else{
+				        	layer.msg(data.msg);
+				        }
+				    },
+				    error: () => {
+				    	layer.close(l);
+						layer.msg('出现异常');
+				    }
+				});
         	}
         }
     }

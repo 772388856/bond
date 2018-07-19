@@ -21,7 +21,8 @@
 
 		<!-- 左侧 -->
 		<div class="admin-left">
-			<div class="user-info" style="background-image: url(../../src/assets/images/page/admin/head.jpg)">
+			<div class="user-info">
+				<img src="../../assets/images/page/admin/head.jpg" />
 				<div class="info">
 					<p>{{ adminInfo.userName }}</p>
 				</div>

@@ -6,6 +6,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static('./'));
+// app.use(express.static('./dist/'));
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -13,6 +14,8 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
+// app.use('/login', express.static('./dist/index.html'));
+// app.use('/admin/*', express.static('./dist/index.html'));
 
 // 登录
 app.post('/web/login', (req, res) => {
@@ -274,6 +277,15 @@ app.get('/web/fundgroups', (req, res) => {
 		msg: "",
 		count: 150,
 		data: arr
+    })
+})
+
+// 基金组合管理 （上传）
+app.post('/web/fundgroup/tags/upload', (req, res) => {
+	res.json({
+        responseCode: 20000,
+		msg: "",
+		data: {}
     })
 })
 

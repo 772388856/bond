@@ -2,6 +2,7 @@
 	<div v-if="!load">
 		<top-title>基金组合标签管理</top-title>
 
+		<!--
 		<div class="top-label clearfix">
 			<a href="javascript:;" class="item-1 item fl">
 				<div>基金组合上传</div>
@@ -47,6 +48,7 @@
 			</div>
 			<my-table :showDel="showDel"></my-table>
 		</div>
+		-->
 	</div>
 </template>
 

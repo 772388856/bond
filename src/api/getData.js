@@ -1,4 +1,5 @@
 import fetch from '../config/fetch'
+import { baseUrl } from '../config/env'
 
 // 登录
 export const login = data => fetch('/web/login', data, 'POST');
@@ -30,3 +31,6 @@ export const fundgroupCondition = code => fetch('/web/fundgroup/condition');
 
 // 基金组合管理 （查询接口）
 export const fundgroups = data => fetch('/web/fundgroups', data);
+
+// 基金组合管理 （上传）
+export const fundgroupsUpload = `${baseUrl}/web/fundgroup/tags/upload`;

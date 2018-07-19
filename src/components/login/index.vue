@@ -25,7 +25,7 @@
 					</div>
 					<div class="item">
 						<i class="pwa-icon icon login-icon"></i>
-						<input type="text" v-model="password" class="input-item" placeholder="请输入密码" />
+						<input type="password" v-model="password" class="input-item" placeholder="请输入密码" />
 					</div>
 					<input class="submit" type="submit" value="登录" />
 				</form>
@@ -75,8 +75,8 @@
         name: 'login',
         data(){
         	return {
-        		userName: '',
-        		password: ''
+        		userName: 'test',
+        		password: '123456'
         	}
         },
         methods: {
@@ -140,6 +140,7 @@
 
 <style lang="scss">
 	.login-page {
+		background: #FFF;
 		.login-inner {
 			position: relative;
 			width: 1383px;
