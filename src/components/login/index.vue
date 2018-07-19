@@ -68,7 +68,7 @@
 </template>
 
 <script>
-	import {login, permission} from '../../api/getData';
+	import {login} from '../../api/getData';
 	import {mapActions, mapState} from 'vuex';
 
     export default {
@@ -79,8 +79,13 @@
         		password: '123456'
         	}
         },
+        mounted(){
+        	this.getAdminData(() => {
+				this.$router.push('/admin');
+			});
+        },
         methods: {
-        	...mapActions(['setAdminData']),
+        	...mapActions(['setAdminData', 'getAdminData']),
         	async submit(){
         		if(!this.userName) {
         			layer.tips('用户名不能为空', '.username-icon', {

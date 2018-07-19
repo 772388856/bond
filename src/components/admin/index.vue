@@ -101,28 +101,28 @@
 
 					switch(list.permissionId) {
 						// 优选基金管理
-						case '1':
+						case 1:
 							href = '/admin/optimization';
 							break;
 						// 基金组合管理
-						case '2':
+						case 2:
 							href = '/admin/combination';
 							break;
 						// 基金组合标签管理
-						case '3':
+						case 3:
 							href = '/admin/label';
 							break;
 						// 黑名单管理
-						case '4':
+						case 4:
 							href = '/admin/blacklist';
 							break;
 						// 基金预警管理
-						case '5':
+						case 5:
 							href = '/admin/warning';
 							break;
 					}
 
-					this.menuList.push({name: list.permissionName, href: href});
+					this.menuList.push({name: list.permissonName, href: href});
 				});
 			}
 		}

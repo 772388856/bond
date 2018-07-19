@@ -61,6 +61,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 			}
 
 			requestObj.open(type, url, true);
+			requestObj.withCredentials = true;
 			requestObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			requestObj.send(sendData);
 
