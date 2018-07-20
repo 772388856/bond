@@ -122,7 +122,7 @@
 							break;
 					}
 
-					this.menuList.push({name: list.permissonName, href: href});
+					this.menuList.push({name: list.permissionName, href: href});					
 				});
 				this.jumpLink();
 			},
