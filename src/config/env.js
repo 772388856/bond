@@ -8,7 +8,7 @@
  */
 
 // let baseUrl = 'http://localhost:3000';
-let baseUrl = 'http://118.25.48.96:8080';
+let baseUrl = 'http://10.2.1.73:8080';
 let routerMode = 'history';
 
 if (process.env.NODE_ENV == 'development') {
