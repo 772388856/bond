@@ -75,8 +75,8 @@
         name: 'login',
         data(){
         	return {
-        		userName: 'test',
-        		password: '123456'
+        		userName: '',
+        		password: ''
         	}
         },
         mounted(){
