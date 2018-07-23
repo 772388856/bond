@@ -33,4 +33,12 @@ export const fundgroupCondition = code => fetch('/web/fundgroup/condition');
 export const fundgroups = data => fetch('/web/fundgroups', data);
 
 // 基金组合管理 （上传）
-export const fundgroupsUpload = `${baseUrl}/web/fundgroup/tags/upload`;
+export const fundgroupsUpload = `${baseUrl}/web/fundgroup/upload`;
+
+
+
+// 基金组合标签管理 （上传）
+export const fundgroupsTagsUpload = `${baseUrl}/web/fundgroup/tags/upload`;
+
+
+
