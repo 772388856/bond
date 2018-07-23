@@ -60,10 +60,12 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 				sendData = params.join('&');
 			}
 
+			document.domain = '118.25.48.96';
+
 			requestObj.open(type, url, true);
 			requestObj.withCredentials = true;
 			requestObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			requestObj.setRequestHeader("Cookie", document.cookie);
+			// requestObj.setRequestHeader("Cookie", document.cookie);
 			requestObj.send(sendData);
 
 			requestObj.onreadystatechange = () => {
