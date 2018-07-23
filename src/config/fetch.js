@@ -60,12 +60,25 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 				sendData = params.join('&');
 			}
 
-			document.domain = '118.25.48.96';
+			if ("withCredentials" in requestObj) {  
+				// 此时即支持CORS的情况  
+				// 检查XMLHttpRequest对象是否有“withCredentials”属性  
+				// “withCredentials”仅存在于XMLHTTPRequest2对象里  
+				requestObj.open(type, url, true);  
+			} else if (typeof XDomainRequest != "undefined") {  
+				// 否则检查是否支持XDomainRequest，IE8和IE9支持  
+				// XDomainRequest仅存在于IE中，是IE用于支持CORS请求的方式  
+				requestObj = new XDomainRequest();  
+				requestObj.open(type, url);  
+			} else {
+				// 否则，浏览器不支持CORS  
+				requestObj = null;  
+				alert('error');
+			} 
 
-			requestObj.open(type, url, true);
+			// requestObj.open(type, url, true);
 			requestObj.withCredentials = true;
 			requestObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			// requestObj.setRequestHeader("Cookie", document.cookie);
 			requestObj.send(sendData);
 
 			requestObj.onreadystatechange = () => {
