@@ -9,9 +9,17 @@
     <div id="app">
         <router-view></router-view>
     </div>
-    <script src="https://cdn.bootcss.com/jquery/1.12.3/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/layer/3.1.0/layer.js"></script>
-    <script src="/config.js"></script>
+    
+    <% if(process.env.NODE_ENV == 'development'){ %>
+    <script src="/dist/libs/jquery.min.js"></script>
+    <script src="/dist/libs/layer/layer.js"></script>
+    <script src="/dist/libs/config.js"></script>
+    <% }else{ %>
+    <script src="/libs/jquery.min.js"></script>
+    <script src="/libs/layer/layer.js"></script>
+    <script src="/libs/config.js"></script>
+    <% } %>
+
     <!-- built files will be auto injected -->
   </body>
 </html>
