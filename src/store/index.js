@@ -8,7 +8,8 @@ const state = {
 	adminInfo: {
 		userId: '',
 		userName: '',
-		permissions: []
+		permissions: [],
+		blacklistCount: 0
 	}
 }
 

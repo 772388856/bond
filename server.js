@@ -57,25 +57,31 @@ app.get('/web/user/B2FCDCFBFCDCBAB5/permission', (req, res) => {
 	               "permissionId":2,
 	               "permissionName":"基金组合管理",
 	               "view":true,
-	               "modify":false
+	               "modify":true
 	           },
 	           {
 	               "permissionId":3,
 	               "permissionName":"基金组合标签管理",
 	               "view":true,
-	               "modify":false
+	               "modify":true
 	           },
 	           {
 	               "permissionId":4,
 	               "permissionName":"黑名单管理",
 	               "view":true,
-	               "modify":false
+	               "modify":true
 	           },
 	            {
 	               "permissionId":5,
 	               "permissionName":"基金预警管理",
 	               "view":true,
-	               "modify":false
+	               "modify":true
+	           },
+	            {
+	               "permissionId":6,
+	               "permissionName":"基金组合提示管理",
+	               "view":true,
+	               "modify":true
 	           }
 	       ]
 	   }
@@ -163,15 +169,19 @@ app.get('/web/preferfund/condition/select', (req, res) => {
         responseCode: 20000,
 		msg: "",
 		data: {
-			"scala": {
-               "id":"B2FCDCFBFCDCBAB1",
-               "name":"规模风格1"
-           },
-	       "value": {
-               "id":"B2FCDCFBFCDCBAB1",
-               "name":"价值风格1"
-           },
-	        "topic": [
+			"scala": [
+				{
+	               "id":"B2FCDCFBFCDCBAB1",
+	               "name":"规模风格1"
+	           }
+           ],
+	       "value": [
+		       {
+	               "id":"B2FCDCFBFCDCBAB1",
+	               "name":"价值风格1"
+	           }
+           ],
+	       "topic": [
 	        	{
 	               "id":"B2FCDCFBFCDCBAB4",
 	               "name":"热门主题4"
@@ -191,10 +201,15 @@ app.get('/web/preferfunds', (req, res) => {
 
 	for(let i = 0; i < 10; i++){
 		arr.push({
+			"rank": `${i}`,
            "code":`xxx_${i}_page${req.query.page}`,
            "name":`xxx_${i}_page${req.query.page}`,
-           "type":`xxx_${i}_page${req.query.page}`,
-           "feture":`xxx_${i}_page${req.query.page}`,
+           "fundType":`xxx_${i}_page${req.query.page}`,
+           "scala":`xxx_${i}_page${req.query.page}`,
+           "value":`xxx_${i}_page${req.query.page}`,
+           "topic":`xxx_${i}_page${req.query.page}`,
+           "rate":`xxx_${i}_page${req.query.page}`,
+           "yieldRate":`xxx_${i}_page${req.query.page}`,
 		});
 	}
 
@@ -267,8 +282,10 @@ app.get('/web/fundgroups', (req, res) => {
 
 	for(let i = 0; i < 10; i++){
 		arr.push({
-           "id":`xxx_${i}_page${req.query.page}`,
-           "name":`xxx_${i}_page${req.query.page}`
+           "code":`xxx_${i}_page${req.query.page}`,
+           "name":`xxx_${i}_page${req.query.page}`,
+           "date":`xxx_${i}_page${req.query.page}`,
+           "reason":`xxx_${i}_page${req.query.page}`,
 		});
 	}
 
@@ -276,7 +293,9 @@ app.get('/web/fundgroups', (req, res) => {
         responseCode: 20000,
 		msg: "",
 		count: 150,
-		data: arr
+		data: {
+			detail: arr
+		}
     })
 })
 
@@ -289,8 +308,60 @@ app.post('/web/fundgroup/upload', (req, res) => {
     })
 })
 
+// 基金组合管理 （下载）
+app.get('/web/fundgroup/download', (req, res) => {
+	res.json({
+        responseCode: 20000,
+		msg: "",
+		data: {}
+    })
+})
+
+// 基金组合管理 （组合详情查询）
+app.get('/web/fundgroup/*', (req, res) => {
+	res.json({
+		responseCode: 20000,
+		msg: "msg",
+		data: [
+			{
+				code: 100000,
+				name: 'xxxxx',
+				seq: 'yyyyy',
+				proportion: 21.212
+			},
+			{
+				code: 100000,
+				name: 'xxxxx',
+				seq: 'yyyyy',
+				proportion: 21.212
+			},
+			{
+				code: 100000,
+				name: 'xxxxx',
+				seq: 'yyyyy',
+				proportion: 21.212
+			},
+			{
+				code: 100000,
+				name: 'xxxxx',
+				seq: 'yyyyy',
+				proportion: 21.212
+			}
+		]
+	})
+})
+
 // 基金组合标签管理 （上传）
 app.post('/web/fundgroup/tags/upload', (req, res) => {
+	res.json({
+        responseCode: 20000,
+		msg: "",
+		data: {}
+    })
+})
+
+// 基金组合标签管理 （下载）
+app.get('/web/fundgroup/tags/download', (req, res) => {
 	res.json({
         responseCode: 20000,
 		msg: "",

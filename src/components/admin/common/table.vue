@@ -4,42 +4,69 @@
 			<thead>
 				<tr>
 					<td v-for="(list,index) in title">{{ list }}</td>
-					<td v-if="modify">操作</td>
+					<td v-if="modify">{{ modifyText ? modifyText : '操作' }}</td>
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-for="(list,index) in lists">
-					<td v-for="item in list">{{ item }}</td>
+					<td v-for="(item, key, index) in list" 
+						v-if="key != 'operationVal'"
+						:class="[
+							{cursor: type == 'combination' && (key == 'date' || key == 'reason')},
+							`td_${index+1}`
+						]"
+						@click="openText(type == 'combination' && (key == 'date' || key == 'reason'), item)"
+					>
+						{{ item | strLength }}
+					</td>
+
 					<td v-if="modify">
+						<!-- 删除 -->
 						<a href="javascript:;" v-if="typeof showDel != 'undefined'" class="del admin-icon" :class="{
 							on: showDel
 						}" @click="delFn(list)"></a>
+
+						<!-- 搜索 -->
+						<a href="javascript:;" class="search admin-icon" @click="searchHandle(list)" v-if="search"></a>
+
+						<!-- 单选 -->
+						<a href="javascript:;" @click="radioFn(list, index)" :class="{on: list.operationVal == 1}" v-if="type == 'tips' || type == 'warning'" class="radio admin-icon"></a>
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		<div class="page">
+		<div v-if="!lists.length" class="no-table">没有数据</div>
+		<div class="page" v-if="lists.length">
 			<a href="javascript:;" class="up page-item" v-if="page > 1" @click="switchPage(0, 'up')">< 上一页</a>
 			<span class="num">
-				<!--
-				<a href="javascript:;" class="page-item">1</a>
-				<span class="spot">...</span>
-				<a href="javascript:;" class="page-item active">14</a>
-				<a href="javascript:;" class="page-item">15</a>
-				<a href="javascript:;" class="page-item">16</a>
-				<span class="spot">...</span>
-				<a href="javascript:;" class="page-item">98</a>
-				-->
+				<template v-if="page > 3">
+					<a href="javascript:;" class="page-item" @click="switchPage(1)">1</a>
+					<span class="spot">...</span>
+				</template>
+
 				<a href="javascript:;" @click="switchPage(num)" class="page-item" :class="{active: num==page}" v-for="num in indexs">{{ num }}</a>
+
+				<template v-if="page < countNum-5">
+					<span class="spot">...</span>
+					<a href="javascript:;" class="page-item" @click="switchPage(countNum)">{{ countNum }}</a>
+				</template>
 			</span>
 			<a href="javascript:;" class="down page-item" v-if="page < countNum" @click="switchPage(0, 'down')">下一页 ></a>
+
+			<!-- 全选 -->
+			<div class="radio-all" v-if="modify && (type == 'tips' || type == 'warning')">
+				<span>整页操作：</span><a href="javascript:;" @click="radioAllFn" :class="{on: radioAll}" class="radio admin-icon"></a>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+	import {fundgroupsQuery} from '../../../api/getData';
+	import {stateHandle} from '../../../config/tool';
+
     export default {
-    	props: ['title','lists','showDel','countNum','page', 'modify'],
+    	props: ['title','lists','showDel','countNum','page', 'modify', 'search', 'type', 'modifyText', 'radioAll'],
        	data(){
        		return {
        			indexs: []
@@ -47,6 +74,19 @@
        	},
        	mounted(){
        		this.pageHandle();
+       	},
+       	filters: {
+       		strLength(str){
+       			if(!str) return str;
+
+       			const newStr = str.toString();
+
+       			if(newStr.length > 30){
+       				return newStr.substr(0, 30) + '...';
+       			}else{
+       				return str;
+       			}
+       		}
        	},
        	methods: {
        		delFn(val){
@@ -96,12 +136,102 @@
 
        			this.$emit('updateData', obj => {
        				obj.page = num;
-       				obj.filterHandle();
+       				obj.filterHandle(() => {}, {
+       					type: 'page'
+       				});
        			});
+       		},
+       		async searchHandle(list){
+       			let l;
+
+       			l = layer.msg('搜索中', {
+					icon: 16,
+					shade: 0.5,
+					time: 0
+				});
+
+       			const res = await fundgroupsQuery(list.code);
+
+       			stateHandle({
+					data: res,
+					codeSuccess: () => {
+						layer.close(l);
+
+						let h = '', noData = '';
+
+						res.data.forEach((list, index) => {
+							h += `
+								<tr>
+									<td>${list.code}</td>
+									<td>${list.name}</td>
+									<td>${list.seq}</td>
+									<td>${list.proportion.toFixed(2)}%</td>
+								</tr>
+							`
+						});
+
+						if(!res.data.length){
+							noData = `<div style="text-align: center; line-height: 100px;">暂无信息</div>`
+						}
+
+						layer.open({
+							type: 1,
+							shade: false,
+							title: false,
+							shade: 0.3,
+							skin: 'layui-layer-molv',
+							maxWidth: 800,
+							maxHeight: 600,
+							content: `
+								<table class="search-table">
+									<thead>
+										<tr>
+											<td>基金代码</td>
+											<td>基金名称</td>
+											<td>基金序号</td>
+											<td>基金比例</td>
+										</tr>
+									</thead>
+									<tbody>
+										${h}
+									</tbody>
+								</table>
+								${noData}
+							`
+						});
+					}
+				});
+       		},
+       		openText(info, text){
+       			if(!info) return false;
+
+       			layer.open({
+					type: 1,
+					shade: false,
+					title: false,
+					shade: 0.3,
+					skin: 'layui-layer-molv',
+					content: `
+						<div style="padding: 30px;">${text}</div>
+					`
+				});
+       		},
+       		radioFn(val, inx){
+				this.$emit('updateData', obj => {
+					obj.radioFn(val, inx);
+				})
+       		},
+       		radioAllFn(){
+       			this.$emit('updateData', obj => {
+					obj.radioAllFn();
+				})
        		}
        	},
        	watch: {
        		page(){
+       			this.pageHandle();
+       		},
+       		countNum(){
        			this.pageHandle();
        		}
        	}
@@ -118,7 +248,7 @@
 		td {
 			height: 56px;
 			border-bottom: 1px solid #ebecf2;
-			padding: 0 10px;
+			padding: 10px 10px;
 		}
 		thead {
 			td {
@@ -139,7 +269,7 @@
 					height: 40px;
 					background: #ded6d9;
 					right: 0;
-					top: 8px;
+					top: 18px;
 				}
 			}
 		}
@@ -165,7 +295,24 @@
 				background-position: 0px -120px;
 			}
 		}
+		.search {
+			display: inline-block;
+			width: 40px;
+			height: 40px;
+			background-position: -120px -160px;
+		}
+		.radio {
+			display: inline-block;
+			width: 80px;
+			height: 40px;
+			background-position: -80px -200px;
+
+			&.on {
+				background-position: 0 -200px;
+			}
+		}
 		.page {
+			overflow: hidden;
 			padding: 10px 20px;
 			* {
 				display: inline-block;
@@ -216,6 +363,37 @@
 					margin: 0 2px;
 				}
 			}
+		}
+		.cursor {
+			cursor: pointer;
+		}
+		.no-table {
+		    text-align: center;
+		    height: 300px;
+		    line-height: 300px;
+		    font-size: 18px;
+		}
+		.radio-all {
+			float: right;
+			line-height: 40px;
+			font-size: 18px;
+			& > * {
+				display: inline-block;
+				vertical-align: middle;
+			}
+			span {
+				margin-right: -10px;
+			}
+		}
+	}
+	.search-table {
+		thead {
+			font-weight: bold;
+		}
+		td {
+			padding: 10px;
+			text-align: center;
+			border-bottom: 1px solid #ebecf2;
 		}
 	}
 </style>

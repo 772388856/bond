@@ -3,8 +3,8 @@
 		<top-title>基金组合管理</top-title>
 
 		<div class="top-label clearfix">
-			<a href="javascript:;" class="item-1 item fl">
-				<form id="upload" enctype='multipart/form-data'>
+			<a href="javascript:;" class="item-1 item fl" v-if="modify">
+				<form id="fundgroupsUploadID" enctype='multipart/form-data'>
 					<div>基金组合上传</div>
 					<div class="icon-box">
 						<i class="icon-1 icon admin-icon"></i>
@@ -12,16 +12,16 @@
 					<input class="file" name="file" type="file" @change="upload" />
 				</form>
 			</a>
-			<a href="javascript:;" v-if="modify" class="item-2 item fl" @click="showDel = !showDel">
-				<div>基金组合编辑</div>
+			<a :href="fundgroupsDownload" class="item-3 item fl" v-if="view">
+				<div>基金组合下载</div>
 				<div class="icon-box">
-					<i class="icon-2 icon admin-icon"></i>
+					<i class="icon-3 icon admin-icon"></i>
 				</div>
 			</a>
 		</div>
 
-		<div class="admin-box">
-			<box-title title="优选基金搜索"></box-title>
+		<div class="admin-box" v-if="view">
+			<box-title title="筛选搜索"></box-title>
 			<div class="condition-item">
 				<my-select text="风险偏好" keyVal="riskPrefer" :lists="riskPrefer" @updateData="updateData" :checkbox="true"></my-select>
 				<my-select text="流动性偏好" keyVal="fluidityPrefer" :lists="fluidityPrefer" @updateData="updateData" :checkbox="true"></my-select>
@@ -34,7 +34,7 @@
 
 		<div class="admin-box">
 			<box-title :title="`共找到${count}个符合条件的结果`"></box-title>
-			<div class="list-tab clearfix">
+			<div class="list-tab clearfix" v-if="view">
 				<div class="left fl">
 					<div class="text fl">基金代码搜索</div>
 					<div class="s-box fl">
@@ -42,17 +42,21 @@
 						<a href="javascript:;" class="s-icon admin-icon" @click="searchCode"></a>
 					</div>
 				</div>
+				<!--
 				<div class="right fr">
 					<a href="javascript:;" class="btn" download="test">表单下载</a>
 				</div>
+				-->
 			</div>
 			<my-table 
-				:title="['基金组合代码', '组合名称']" 
-				:lists="fundgroupData" :showDel="showDel"
+				:title="['基金组合代码', '组合名称', '建仓/调仓日期', '推荐理由']" 
+				:lists="fundgroupData | dataSort"
 				:countNum="countNum"
 				:page="page"
 				@updateData="updateData"
-				:modify="modify"
+				:modify="view"
+				:search="true"
+				type="combination"
 			></my-table>
 		</div>
 	</div>
@@ -65,7 +69,7 @@
 	import boxTitle from '../common/boxTitle'
 	import mySelect from '../common/select'
 	import myTable from '../common/table'
-	import {fundgroupCondition, fundgroups, fundgroupsUpload} from '../../../api/getData';
+	import {fundgroupCondition, fundgroups, fundgroupsUpload, fundgroupsDownload} from '../../../api/getData';
 	import {stateHandle} from '../../../config/tool';
 
     export default {
@@ -73,7 +77,6 @@
         components: { topTitle, topText, boxTitle, mySelect, myTable },
         data(){
         	return {
-        		showDel: false,
         		codeVal: '',
         		load: true,
         		riskPrefer: {
@@ -89,7 +92,26 @@
         		countNum: 0,
         		count: 0,
         		fundgroupData: [],
-        		modify: false
+        		modify: false,
+        		view: false,
+        		fundgroupsDownload: fundgroupsDownload
+        	}
+        },
+        filters: {
+        	dataSort(lists){
+        		if(!lists.length) return lists;
+
+        		const newData = [];
+        		lists.forEach((list, index) => {
+        			newData.push({
+        				code: list.code,
+        				name: list.name,
+        				date: list.date,
+        				reason: list.reason
+        			})
+        		});
+
+        		return newData;
         	}
         },
         computed: {
@@ -111,8 +133,9 @@
 		},
 		mounted(){
 			this.adminInfo.permissions.forEach((list, index) => {
-				if(list.permissionId == '2' && list.modify){
-					this.modify = true;
+				if(list.permissionId == '2'){
+					if(list.modify) this.modify = true;
+					if(list.view) this.view = true;
 				}
 			});
 		},
@@ -133,6 +156,8 @@
 			},
         	async filterHandle(callback, config={}){
         		let l;
+
+        		config.type != 'page' && (this.page = 1);
 
         		if(config.tips !== false){
 	        		l = layer.msg('搜索中', {
@@ -171,7 +196,7 @@
 				stateHandle({
 					data: res,
 					codeSuccess: () => {
-						this.fundgroupData = res.data;
+						this.fundgroupData = res.data.detail;
 						this.countNum = Math.ceil(res.count / this.pageSize);
 						this.count = res.count;
 						config.tips !== false && layer.close(l);
@@ -209,7 +234,7 @@
 				    url: fundgroupsUpload,
 				    type: 'POST',
 				    cache: false,	
-				    data: new FormData(document.getElementById('upload')),
+				    data: new FormData(document.getElementById('fundgroupsUploadID')),
 				    processData: false,
 				    contentType: false,
 				    dataType:"json",
@@ -218,12 +243,16 @@
 				        if(data.responseCode == '20000'){
 				        	layer.msg('上传成功');
 				        }else{
-				        	layer.msg(data.msg);
+			        		layer.msg(data.msg);
 				        }
 				    },
-				    error: () => {
+				    error: (res) => {
 				    	layer.close(l);
-						layer.msg('出现异常');
+						if(res.responseJSON && res.responseJSON.message){
+							layer.msg(res.responseJSON.message);
+						}else{
+							layer.msg('出现异常');
+						}
 				    }
 				});
         	}

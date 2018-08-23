@@ -1,6 +1,6 @@
 <template>
-	<div v-if="!load" class="warning_inner">
-		<top-title>基金组合提示管理</top-title>
+	<div v-if="!load" class="tips_inner">
+		<top-title>基金提示管理</top-title>
 
 		<div class="admin-box">
 			<box-title :title="`共找到${count}个符合条件的结果`"></box-title>
@@ -14,14 +14,14 @@
 				</div>
 			</div>
 			<my-table 
-				:title="['组合提示id', '基金组合代码', '组合名称', '基金代码', '基金名称', '提示种类id', '提示种类名称', '提示内容', '提示日期']" 
+				:title="['基金提示id', '基金代码', '基金名称', '提示种类id', '提示种类名称', '提示内容', '提示日期']" 
 				:lists="prompt | dataSort"
 				:countNum="countNum"
 				:page="page"
 				@updateData="updateData"
 				:modify="modify"
 				modifyText="警告操作"
-				type="warning"
+				type="tips"
 				:radioAll="radioAll"
 			></my-table>
 		</div>
@@ -33,11 +33,11 @@
 	import topTitle from '../common/topTitle';
 	import boxTitle from '../common/boxTitle'
 	import myTable from '../common/table'
-	import {fundgroupPrompt, fundgroupPromptState} from '../../../api/getData';
+	import {fundPrompt, fundPromptState} from '../../../api/getData';
 	import {stateHandle} from '../../../config/tool';
 
     export default {
-        name: 'warning',
+        name: 'tips',
         components: { topTitle, myTable, boxTitle },
         data(){
         	return {
@@ -61,8 +61,6 @@
         		lists.forEach((list, index) => {
         			newData.push({
         				id: list.id,
-        				groupCode: list.groupCode,
-        				groupName: list.groupName,
         				fundCode: list.fundCode,
         				fundName: list.fundName,
         				typeId: list.typeId,
@@ -93,7 +91,7 @@
 		},
 		mounted(){
 			this.adminInfo.permissions.forEach((list, index) => {
-				if(list.permissionId == '5'){
+				if(list.permissionId == '6' && list.modify){
 					if(list.modify) this.modify = true;
 					if(list.view) this.view = true;
 				}
@@ -122,7 +120,7 @@
 					str.code = this.codeVal;
 				}
 
-				const res = await fundgroupPrompt(str);
+				const res = await fundPrompt(str);
 
 				stateHandle({
 					data: res,
@@ -164,7 +162,7 @@
 				str.status = obj.operationVal == '1' ? '0' : '1';
 				str.id = idArr;
 
-				const res = await fundgroupPromptState(str);
+				const res = await fundPromptState(str);
 
 				stateHandle({
 					data: res,
@@ -208,7 +206,7 @@
 				str.status = this.radioAll ? '0' : '1';
 				str.id = idArr;
 
-				const res = await fundgroupPromptState(str);
+				const res = await fundPromptState(str);
 
 				stateHandle({
 					data: res,
@@ -226,7 +224,7 @@
 </script>
 
 <style lang="scss">
-	.warning_inner {
+	.tips_inner {
 		table {
 			table-layout: fixed;
 		}

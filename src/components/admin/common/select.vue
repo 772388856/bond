@@ -31,7 +31,17 @@
 
 <script>	
     export default {
-        props: ['lists', 'keyVal', 'checkbox', 'text'],
+        props: {
+        	lists: null, 
+        	keyVal: null, 
+        	checkbox: null, 
+        	text: null, 
+        	type: {
+				default(){
+					return 'id'
+				}
+			}
+    	},
         data(){
         	return {
         		optionsActive: false,
@@ -90,12 +100,12 @@
         			let type = '';
 
         			this.lists.default.forEach((list2, index2) => {
-        				if(list.id == list2.id){
+        				if(list[this.type] == list2.id){
         					type = 'active';
         				}
         			});
 
-        			oLi += `<li class="${type} ${this.keyVal}_checkbox_list" id="${list.id}" name="${list.name}">
+        			oLi += `<li class="${type} ${this.keyVal}_checkbox_list" id="${list[this.type]}" name="${list.name}">
         				<i class="checkbox-icon admin-icon"></i>
         				<span>${list.name}</span>
     				</li>`

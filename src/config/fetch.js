@@ -1,17 +1,36 @@
 import { baseUrl } from './env'
 
+window.urlEncode = function (param, key, encode) {  
+  if(param==null) return '';  
+  var paramStr = '';  
+  var t = typeof (param);  
+  if (t == 'string' || t == 'number' || t == 'boolean') {  
+    paramStr += '&' + key + '=' + ((encode==null||encode) ? encodeURIComponent(param) : param);  
+  } else {  
+    for (var i in param) {  
+      // var k = key == null ? i : key + (param instanceof Array ? '[' + i + ']' : '.' + i); 
+      var k = key == null ? i : key + (param instanceof Array ? '[]' : '.' + i);  
+      paramStr += window.urlEncode(param[i], k, encode);  
+    }  
+  }  
+  return paramStr;  
+};  
+
 export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 	type = type.toUpperCase();
 	url = baseUrl + url;
 
 	if (type == 'GET') {
 		let dataStr = ''; //数据拼接字符串
-		Object.keys(data).forEach(key => {
-			dataStr += key + '=' + data[key] + '&';
-		})
+		// Object.keys(data).forEach(key => {
+		// 	dataStr += key + '=' + data[key] + '&';
+		// })
+
+		dataStr = window.urlEncode(data)
+		dataStr = dataStr.substr(1,dataStr.length-1);
 
 		if (dataStr !== '') {
-			dataStr = dataStr.substr(0, dataStr.lastIndexOf('&'));
+			// dataStr = dataStr.substr(0, dataStr.lastIndexOf('&'));
 			url = url + '?' + dataStr;
 		}
 	}
@@ -51,13 +70,16 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 			}
 
 			let sendData = '';
-			if (type == 'POST') {
-				let params = [];
-				for (var key in data){
-					params.push(key + '=' + data[key]);
-				}
+			if (type == 'POST' || type == 'DELETE' || type == 'PUT') {
+				// let params = [];
+				// for (var key in data){
+				// 	params.push(key + '=' + data[key]);
+				// }
 
-				sendData = params.join('&');
+				// sendData = params.join('&');
+
+				sendData = window.urlEncode(data)
+				sendData = sendData.substr(1,sendData.length-1);
 			}
 
 			requestObj.open(type, url, true);

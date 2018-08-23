@@ -13,6 +13,12 @@
 
 		span {
 			color: #db5565;
+			&:after {
+				content: ",";
+			}
+			&:last-child:after {
+				content: "";
+			}
 		}
 	}
 </style>

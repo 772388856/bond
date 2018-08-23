@@ -19,6 +19,7 @@ import blacklist from '../components/admin/blacklist/'
 import combination from '../components/admin/combination/'
 import warning from '../components/admin/warning/'
 import label from '../components/admin/label/'
+import tips from '../components/admin/tips/'
 
 export default [{
     path: '/',
@@ -56,6 +57,10 @@ export default [{
                 {
                     path: '/admin/label',
                     component: label
+                },
+                {
+                    path: '/admin/tips',
+                    component: tips
                 }
             ]
         }

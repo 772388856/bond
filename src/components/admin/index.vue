@@ -8,14 +8,9 @@
 				<span class="text">基金理财服务管理平台</span>
 			</a>
 			<div class="right fr">
-				<a href="javascript:;" class="item icon-1 admin-icon">
-					<span class="num">6</span>
+				<a href="javascript:;" class="item icon-1 admin-icon" @click="informationHandle">
+					<span class="num" v-if="false">6</span>
 				</a>
-				<a href="javascript:;" class="item icon-2 admin-icon">
-					<span class="num">98</span>
-				</a>
-				<a href="javascript:;" class="item icon-3 admin-icon"></a>
-				<a href="javascript:;" class="item icon-4 admin-icon"></a>
 			</div>
 		</div>
 
@@ -31,7 +26,7 @@
 				<router-link :to="list.href" class="menu-list" v-for="(list, index) in menuList">
 					<i class="icon admin-icon icon-4"></i>
 					{{ list.name }}
-					<span class="num" v-if="list.num">{{ list.num }}</span>
+					<span class="num" v-if="list.id == '4' && adminInfo.blacklistCount">{{ adminInfo.blacklistCount }}</span>
 				</router-link>
 			</div>
 		</div>
@@ -46,6 +41,8 @@
 <script>
 	import {mapActions, mapState} from 'vuex';
 	import {permission} from '../../api/getData';
+	import {fundgroupAlert} from '../../api/getData';
+	import {stateHandle} from '../../config/tool';
 
     export default {
         name: 'admin',
@@ -53,7 +50,11 @@
         	return {
         		menuList: [],
         		load: true,
-        		layerLoad: ''
+        		layerLoad: '',
+        		alertPage: 1,
+        		alertPageSize: 10,
+        		alertCount: 0,
+        		alertData: []
         	}
         },
         computed: {
@@ -66,19 +67,19 @@
 				time: 0
 			});
 
-			setTimeout(() => {
-				layer.close(this.layerLoad);
-				this.load = false;
-			}, 2000);
+			window.informationHandle = this.informationHandle;
 		},
 		mounted(){
 			this.getAdminData(() => {
-				this.getPermissions();
+				this.getPermissions(() => {
+					layer.close(this.layerLoad);
+					this.load = false;
+				});
 			});
 		},
 		methods: {
 			...mapActions(['setAdminData','getAdminData']),
-			async getPermissions(){
+			async getPermissions(callback){
 				const permissionRes = await permission(this.adminInfo.userId);
 
 				if(permissionRes.statusError && permissionRes.status != 200){
@@ -91,6 +92,7 @@
 						permissions: permissionRes.data.permissions
 	        		});
 	        		this.setMenu();
+	        		callback && callback();
 				}else{
 					this.$router.push('/login');
 				}
@@ -120,9 +122,13 @@
 						case 5:
 							href = '/admin/warning';
 							break;
+						// 基金预警管理
+						case 6:
+							href = '/admin/tips';
+							break;
 					}
 
-					this.menuList.push({name: list.permissionName, href: href});					
+					this.menuList.push({name: list.permissionName, id: list.permissionId, href: href});					
 				});
 				this.jumpLink();
 			},
@@ -141,6 +147,128 @@
 				if(!num){
 					this.menuList[0] && this.menuList[0].href && this.$router.push(this.menuList[0].href);
 				}
+			},
+			async informationHandle(type){
+				let tdStr = '', noData = '';
+
+				let handle = () => {
+					this.alertData.forEach((list, index) => {
+						tdStr += `
+							<tr>
+								<td>${list.id}</td>
+								<td>${list.groupCode}</td>
+								<td>${list.groupName}</td>
+								<td>${list.typeId}</td>
+								<td>${list.typeName}</td>
+								<td>${list.content}</td>
+								<td>${list.date}</td>
+							</tr>
+						`
+					});
+
+					if(!this.alertData.length){
+						noData = `<div style="text-align: center; line-height: 100px;">暂无信息</div>`;
+					}
+
+					layer.open({
+						type: 1,
+						shade: false,
+						title: false,
+						shade: 0.3,
+						skin: 'layui-layer-molv',
+						id: 'informationLayui',
+						maxWidth: 1000,
+						maxHeight: 800,
+						content: `
+							<div class="information-box">
+								<table>
+									<thead>
+										<tr>
+											<td>组合预警id</td>
+											<td>组合代码</td>
+											<td>组合名称</td>
+											<td>预警种类id</td>
+											<td>预警种类名称</td>
+											<td>预警内容</td>
+											<td>预警日期</td>
+										</tr>
+									</thead>
+									<tbody id="informationBody">
+										${tdStr}
+									</tbody>
+								</table>
+								${noData}
+								<div>
+									<a href="javascript:;" style="display: none" id="informationMOREBTN1" onclick="informationHandle(0)">上一页</a>
+									<a href="javascript:;" style="display: none" id="informationMOREBTN2" onclick="informationHandle(1)">下一页</a>
+								</div>
+							</div>
+						`
+					}, () => {
+
+					});
+				}
+
+				if(typeof type != 'object'){
+					if(type){
+						this.alertPage++;
+					}else{
+						this.alertPage--;
+					}
+				}
+				
+				let l = layer.msg('加载中', {
+					icon: 16,
+					shade: 0.5,
+					time: 0
+				});
+
+				const res = await fundgroupAlert({
+					page: this.alertPage,
+        			pageSize: this.alertPageSize
+				});
+
+				stateHandle({
+					data: res,
+					codeSuccess: () => {
+						layer.close(l);
+
+						this.alertCount = Math.ceil(res.count / this.alertPageSize);	
+						this.alertData = res.data;					
+
+						if(!$('.information-box').length){
+							handle();
+						}else{
+							this.alertData.forEach((list, index) => {
+								tdStr += `
+									<tr>
+										<td>${list.id}</td>
+										<td>${list.groupCode}</td>
+										<td>${list.groupName}</td>
+										<td>${list.typeId}</td>
+										<td>${list.typeName}</td>
+										<td>${list.content}</td>
+										<td>${list.date}</td>
+									</tr>
+								`
+							});
+
+							$('#informationBody').html(tdStr);
+							$('.layui-layer').css('top', ($(window).height() - $('#informationLayui').height()) / 2)
+						}
+
+						if(this.alertData.length && this.alertCount && (this.alertPage < this.alertCount)){
+							$('#informationMOREBTN2').show();
+						}else{
+							$('#informationMOREBTN2').hide();
+						}
+						if(this.alertData.length && this.alertCount && (this.alertPage > 1)){
+							$('#informationMOREBTN1').show();
+						}else{
+							$('#informationMOREBTN1').hide();
+						}
+					}
+				});
 			}
 		}
     }
@@ -182,7 +310,7 @@
 				vertical-align: middle;
 			}
 			.right {
-				padding-right: 10px;
+				padding-right: 20px;
 				.item {
 			    	display: inline-block;
 			    	width: 40px;
@@ -246,6 +374,7 @@
 					width: 191px;
 					padding-left: 19px;
 					padding-bottom: 12px;
+					padding-top: 12px;
 					color: #FFF;
 					font-size: 16px;
 					background-image: linear-gradient(bottom, rgba(0,0,0,.5), transparent); 
@@ -254,6 +383,7 @@
 					overflow: hidden;
 					text-overflow:ellipsis;
 					white-space: nowrap;
+					margin-right: 10px;
 				}
 			}
 			.menu {
@@ -404,7 +534,7 @@
 					border-radius: 5px;
 					height: 36px;
 					padding: 0 8px;
-					width: 130px;
+					width: 140px;
 					padding-right: 40px;
 				}
 			}
@@ -455,6 +585,9 @@
 			.item-2 {
 				background: #2095f2;
 			}
+			.item-3 {
+				background: #e81d62;
+			}
 			.icon-box {
 				width: 110px;
 				height: 100%;
@@ -479,6 +612,32 @@
 			.icon-2 {
 				background-position: -80px -120px;
 			}
+			.icon-3 {
+				background-position: -120px -120px;
+			}
+		}
+	}
+	.information-box {
+		padding: 10px;
+		text-align: center;
+
+		td {
+			padding: 2px 10px;
+		}
+		thead {
+			td {
+				font-weight: bold;
+			}
+		}
+		a {
+			display: inline-block;
+			color: #FFF;
+			background: #db5565;
+			padding: 6px 40px;
+			border-radius: 50px;
+			margin-top: 10px;
+			margin-left: 10px;
+			margin-right: 10px;
 		}
 	}
 </style>
