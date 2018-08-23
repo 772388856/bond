@@ -1,5 +1,5 @@
 <template>
-	<div class="admin-select" @mouseenter="mouseenterSelect" @mouseleave="mouseleaveSelect" @click="checkboxHandle">
+	<div class="admin-select" v-if="lists.list.length" @mouseenter="mouseenterSelect" @mouseleave="mouseleaveSelect" @click="checkboxHandle">
 		<!-- 多选 -->
 		<span v-if="checkbox" class="text checkbox">
 			<template v-if="lists.default.length == 1">

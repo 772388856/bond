@@ -39,7 +39,7 @@
 		<div class="page" v-if="lists.length">
 			<a href="javascript:;" class="up page-item" v-if="page > 1" @click="switchPage(0, 'up')">< 上一页</a>
 			<span class="num">
-				<template v-if="page > 3">
+				<template v-if="page > 3 && countNum > 5">
 					<a href="javascript:;" class="page-item" @click="switchPage(1)">1</a>
 					<span class="spot">...</span>
 				</template>
