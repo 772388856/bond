@@ -13,6 +13,9 @@ export const getAdminInfo = () => fetch('/web/user/info');
 // 站内信
 export const fundgroupAlert = data => fetch('/web/fundgroup/alert', data);
 
+// 退出
+export const logout = () => fetch('/web/logout');
+
 
 
 // 优选基金（初始化）

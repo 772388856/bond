@@ -8,7 +8,10 @@
 				<span class="text">基金理财服务管理平台</span>
 			</a>
 			<div class="right fr">
-				<a href="javascript:;" class="item icon-1 admin-icon" @click="informationHandle">
+				<a href="javascript:;" class="item icon-1 admin-icon" title="站内信" @click="informationHandle">
+					<span class="num" v-if="false">6</span>
+				</a>
+				<a href="javascript:;" class="item icon-5 admin-icon" title="退出" @click="logoutHandle">
 					<span class="num" v-if="false">6</span>
 				</a>
 			</div>
@@ -41,7 +44,7 @@
 <script>
 	import {mapActions, mapState} from 'vuex';
 	import {permission} from '../../api/getData';
-	import {fundgroupAlert} from '../../api/getData';
+	import {fundgroupAlert, logout} from '../../api/getData';
 	import {stateHandle} from '../../config/tool';
 
     export default {
@@ -269,6 +272,24 @@
 						}
 					}
 				});
+			},
+			async logoutHandle(){
+				let l = layer.msg('正在退出', {
+					icon: 16,
+					shade: 0.5,
+					time: 0
+				});
+
+				const res = await logout();
+
+				stateHandle({
+					data: res,
+					codeSuccess: () => {
+						layer.close(l);
+						layer.msg('退出成功');
+						this.$router.push('/login');
+					}
+				});
 			}
 		}
     }
@@ -348,6 +369,9 @@
 			    }
 			    .icon-4 {
 			    	background-position: -120px 0;
+			    }
+			    .icon-5 {
+			    	background-position: -160px -40px;
 			    }
 			}
 		}
@@ -559,13 +583,13 @@
 		.top-label {
 			margin-bottom: 15px;
 			.item {
-				width: 333px;
+				width: 310px;
 				height: 108px;
 				line-height: 108px;
 				color: #FFF;
 				font-size: 30px;
 				font-weight: bold;
-				padding-left: 35px;
+				padding-left: 25px;
 				margin-right: 24px;
 				position: relative;
 			}

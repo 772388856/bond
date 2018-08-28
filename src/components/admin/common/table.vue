@@ -269,7 +269,8 @@
 					height: 40px;
 					background: #ded6d9;
 					right: 0;
-					top: 18px;
+					top: 50%;
+					margin-top: -20px;
 				}
 			}
 		}

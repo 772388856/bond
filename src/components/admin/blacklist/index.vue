@@ -33,7 +33,7 @@
 		</div>
 
 		<div class="admin-box">
-			<box-title title="基金黑名单"></box-title>
+			<box-title :title="`共找到${count}个符合条件的结果`"></box-title>
 			<div class="list-tab clearfix" v-if="view">
 				<div class="left fl">
 					<div class="text fl">基金代码搜索</div>
@@ -86,7 +86,8 @@
         		blacklistsData: [],
         		modify: false,
         		view: false,
-        		blacklistDownload: blacklistDownload
+        		blacklistDownload: blacklistDownload,
+        		count: 0
         	}
         },
         computed: {
@@ -196,6 +197,7 @@
 					codeSuccess: () => {
 						this.blacklistsData = res.data.detail;
 						this.countNum = Math.ceil(res.count / this.pageSize);
+						this.count = res.count;
 						config.tips !== false && layer.close(l);
 					}
 				});

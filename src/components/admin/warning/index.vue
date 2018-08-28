@@ -6,10 +6,10 @@
 			<box-title :title="`共找到${count}个符合条件的结果`"></box-title>
 			<div class="list-tab clearfix" v-if="view">
 				<div class="left fl">
-					<div class="text fl">基金代码搜索</div>
+					<div class="text fl">组合代码搜索</div>
 					<div class="s-box fl">
-						<input type="text" v-model="codeVal" class="s-input" placeholder="请输入基金代码" />
-						<a href="javascript:;" class="s-icon admin-icon" @click="searchCode"></a>
+						<input type="text" v-model="codeVal" class="s-input" placeholder="请输入组合代码" />
+						<a href="javascript:;" class="s-icon admin-icon" @click="filterHandle"></a>
 					</div>
 				</div>
 			</div>
@@ -136,16 +136,6 @@
 				});
 
 				typeof callback == 'function' && callback();
-        	},
-        	searchCode(){
-        		if(!this.codeVal){
-        			layer.tips('基金代码不能为空', '.s-input', {
-						tips: 1
-					});
-        			return false;
-        		}
-
-        		this.filterHandle();
         	},
         	updateData(callback){
         		callback && callback(this);

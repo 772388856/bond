@@ -36,9 +36,6 @@
 				<my-select text="规模风格" keyVal="scala" :lists="scala" @updateData="updateData" :checkbox="true"></my-select>
 				<my-select text="价值风格" keyVal="value" :lists="value" @updateData="updateData" :checkbox="true"></my-select>
 				<my-select text="热门主题" keyVal="topic" :lists="topic" @updateData="updateData" :checkbox="true"></my-select>
-				<a href="javascript:;" class="condition-search" @click="filterHandle">
-					<i class="admin-icon"></i>
-				</a>
 				<a href="javascript:;" class="condition-reset" @click="setPreferfund">设置</a>
 				<a href="javascript:;" class="condition-reset" @click="reset">重置所有条件</a>
 			</div>
@@ -51,12 +48,12 @@
 					<div class="text fl">基金代码搜索</div>
 					<div class="s-box fl">
 						<input type="text" v-model="codeVal" class="s-input" placeholder="请输入基金代码" />
-						<a href="javascript:;" class="s-icon admin-icon" @click="searchCode"></a>
+						<a href="javascript:;" class="s-icon admin-icon" @click="filterHandle"></a>
 					</div>
 				</div>
 			</div>
 			<my-table 
-				:title="['序号', '基金代码', '基金名称', '二级基金类型名称', '资金规模', '价值取向', '热门主题', '评级', '近一年收益率']" 
+				:title="['序号', '基金代码', '基金名称', '二级基金类型名称', '规模风格', '价值风格', '热门主题', '三年评级', '五年评级', '近一年收益率']" 
 				:lists="preferfunds | dataSort" :showDel="true"
 				:countNum="countNum"
 				:page="page"
@@ -124,7 +121,8 @@
         				scala: list.scala,
         				value: list.value,
         				topic: list.topic,
-        				rate: list.rate,
+        				threeYearRate: list.threeYearRate,
+        				fiveYearRate: list.fiveYearRate,
         				yieldRate: list.yieldRate
         			})
         		});
@@ -256,16 +254,6 @@
 				});
 
 				typeof callback == 'function' && callback();
-        	},
-        	searchCode(){
-        		if(!this.codeVal){
-        			layer.tips('基金代码不能为空', '.s-input', {
-						tips: 1
-					});
-        			return false;
-        		}
-
-        		this.filterHandle();
         	},
         	updateData(callback){
         		callback && callback(this);

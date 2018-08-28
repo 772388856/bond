@@ -148,15 +148,18 @@
 		background: #FFF;
 		.login-inner {
 			position: relative;
-			width: 1383px;
+			max-width: 1383px;
+			min-width: 900px;
 			margin: 0 auto;
 		}
 		.header-one {
-			width: 1383px;
+			max-width: 1283px;
+			min-width: 800px;
 			height: 50px;
 			line-height: 50px;
 			background: #FFF;
 			overflow: hidden;
+			padding: 0 50px;
 		}
 		.header-one .left {
 			font-size: 20px;
@@ -181,13 +184,13 @@
 		}
 		.login-main{
 			height: 605px;
-			min-width: 1383px;
+			min-width: 900px;
 			background: url(../../assets/images/page/login/banner.jpg) center center no-repeat;
 		}
 		.login-box {
 			position: absolute;
 			top: 132px;
-			right: 0;
+			right: 50px;
 			width: 340px;
 			min-height: 300px;
 			padding: 20px 28px;
