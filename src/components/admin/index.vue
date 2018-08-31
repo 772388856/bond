@@ -583,14 +583,14 @@
 		.top-label {
 			margin-bottom: 15px;
 			.item {
-				width: 310px;
+				width: 330px;
 				height: 108px;
 				line-height: 108px;
 				color: #FFF;
 				font-size: 30px;
 				font-weight: bold;
-				padding-left: 25px;
-				margin-right: 24px;
+				padding-left: 15px;
+				margin-right: 20px;
 				position: relative;
 			}
 			.item-1 {

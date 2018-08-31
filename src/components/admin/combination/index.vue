@@ -207,7 +207,7 @@
         	},
         	searchCode(){
         		if(!this.codeVal){
-        			layer.tips('基金代码不能为空', '.s-input', {
+        			layer.tips('组合代码不能为空', '.s-input', {
 						tips: 1
 					});
         			return false;

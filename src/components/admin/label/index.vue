@@ -5,7 +5,7 @@
 		<div class="top-label clearfix">
 			<a href="javascript:;" class="item-1 item fl" v-if="modify">
 				<form id="fundgroupsTagsUploadID" enctype='multipart/form-data'>
-					<div>基金标签上传</div>
+					<div>组合标签上传</div>
 					<div class="icon-box">
 						<i class="icon-1 icon admin-icon"></i>
 					</div>
@@ -200,7 +200,7 @@
         	},
         	searchCode(){
         		if(!this.codeVal){
-        			layer.tips('基金代码不能为空', '.s-input', {
+        			layer.tips('组合代码不能为空', '.s-input', {
 						tips: 1
 					});
         			return false;
