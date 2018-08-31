@@ -152,19 +152,19 @@
 				}
 			},
 			async informationHandle(type){
-				let tdStr = '', noData = '';
+				let tdStr = '', noData = '', maxWin = window.innerWidth/4;
 
 				let handle = () => {
 					this.alertData.forEach((list, index) => {
 						tdStr += `
 							<tr>
-								<td>${list.id}</td>
-								<td>${list.groupCode}</td>
-								<td>${list.groupName}</td>
-								<td>${list.typeId}</td>
-								<td>${list.typeName}</td>
-								<td>${list.content}</td>
-								<td>${list.date}</td>
+								<td style="max-width: ${maxWin}px">${list.id}</td>
+								<td style="max-width: ${maxWin}px">${list.groupCode}</td>
+								<td style="max-width: ${maxWin}px">${list.groupName}</td>
+								<td style="max-width: ${maxWin}px">${list.typeId}</td>
+								<td style="max-width: ${maxWin}px">${list.typeName}</td>
+								<td style="max-width: ${maxWin}px">${list.content}</td>
+								<td style="max-width: ${maxWin}px">${list.date}</td>
 							</tr>
 						`
 					});
@@ -180,8 +180,8 @@
 						shade: 0.3,
 						skin: 'layui-layer-molv',
 						id: 'informationLayui',
-						maxWidth: 1000,
-						maxHeight: 800,
+						maxWidth: window.innerWidth-100,
+						maxHeight: window.innerHeight-100,
 						content: `
 							<div class="information-box">
 								<table>
@@ -245,19 +245,22 @@
 							this.alertData.forEach((list, index) => {
 								tdStr += `
 									<tr>
-										<td>${list.id}</td>
-										<td>${list.groupCode}</td>
-										<td>${list.groupName}</td>
-										<td>${list.typeId}</td>
-										<td>${list.typeName}</td>
-										<td>${list.content}</td>
-										<td>${list.date}</td>
+										<td style="max-width: ${maxWin}px">${list.id}</td>
+										<td style="max-width: ${maxWin}px">${list.groupCode}</td>
+										<td style="max-width: ${maxWin}px">${list.groupName}</td>
+										<td style="max-width: ${maxWin}px">${list.typeId}</td>
+										<td style="max-width: ${maxWin}px">${list.typeName}</td>
+										<td style="max-width: ${maxWin}px">${list.content}</td>
+										<td style="max-width: ${maxWin}px">${list.date}</td>
 									</tr>
 								`
 							});
 
-							$('#informationBody').html(tdStr);
-							$('.layui-layer').css('top', ($(window).height() - $('#informationLayui').height()) / 2)
+							setTimeout(() => {
+								$('.layui-layer').width($('.layui-layer').width());
+								$('#informationBody').html(tdStr);
+								$('.layui-layer').css('top', ($(window).height() - $('#informationLayui').height()) / 2)
+							}, 200);
 						}
 
 						if(this.alertData.length && this.alertCount && (this.alertPage < this.alertCount)){
@@ -645,6 +648,9 @@
 		padding: 10px;
 		text-align: center;
 
+		table {
+			width: 100%;
+		}
 		td {
 			padding: 2px 10px;
 		}
