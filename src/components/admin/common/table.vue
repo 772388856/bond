@@ -245,6 +245,7 @@
 
 <style lang="scss">
 	.admin-table {
+		overflow-x: auto;
 		table {
 			width: 100%;
 			text-align: center;
