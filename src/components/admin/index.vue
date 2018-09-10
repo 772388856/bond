@@ -161,6 +161,9 @@
 								<td style="max-width: ${maxWin}px">${list.id}</td>
 								<td style="max-width: ${maxWin}px">${list.groupCode}</td>
 								<td style="max-width: ${maxWin}px">${list.groupName}</td>
+								<td style="max-width: ${maxWin}px">${list.fundCode}</td>
+								<td style="max-width: ${maxWin}px">${list.fundName}</td>
+								<td style="max-width: ${maxWin}px">${list.fundProportion}</td>
 								<td style="max-width: ${maxWin}px">${list.typeId}</td>
 								<td style="max-width: ${maxWin}px">${list.typeName}</td>
 								<td style="max-width: ${maxWin}px">${list.content}</td>
@@ -190,6 +193,9 @@
 											<td>组合预警id</td>
 											<td>组合代码</td>
 											<td>组合名称</td>
+											<td>基金代码</td>
+											<td>基金名称</td>
+											<td>基金比例</td>
 											<td>预警种类id</td>
 											<td>预警种类名称</td>
 											<td>预警内容</td>
@@ -248,6 +254,9 @@
 										<td style="max-width: ${maxWin}px">${list.id}</td>
 										<td style="max-width: ${maxWin}px">${list.groupCode}</td>
 										<td style="max-width: ${maxWin}px">${list.groupName}</td>
+										<td style="max-width: ${maxWin}px">${list.fundCode}</td>
+										<td style="max-width: ${maxWin}px">${list.fundName}</td>
+										<td style="max-width: ${maxWin}px">${list.fundProportion}</td>
 										<td style="max-width: ${maxWin}px">${list.typeId}</td>
 										<td style="max-width: ${maxWin}px">${list.typeName}</td>
 										<td style="max-width: ${maxWin}px">${list.content}</td>
@@ -586,14 +595,15 @@
 		.top-label {
 			margin-bottom: 15px;
 			.item {
-				width: 330px;
+				width: 30%;
+				max-width: 300px;
 				height: 108px;
 				line-height: 108px;
 				color: #FFF;
-				font-size: 30px;
+				font-size: 1.8em;
 				font-weight: bold;
-				padding-left: 15px;
-				margin-right: 20px;
+				padding-left: 1%;
+				margin-right: 2%;
 				position: relative;
 			}
 			.item-1 {
@@ -616,7 +626,8 @@
 				background: #e81d62;
 			}
 			.icon-box {
-				width: 110px;
+				max-width: 110px;
+				width: 30%;
 				height: 100%;
 				top: 0;
 				right: 0;

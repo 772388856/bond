@@ -40,7 +40,8 @@
 				default(){
 					return 'id'
 				}
-			}
+			},
+			allSelect: null
     	},
         data(){
         	return {
@@ -77,10 +78,24 @@
         	saveData(id, name, type){
         		if(type == 'add'){
         			this.$emit('updateData', (obj) => {
-	        			obj[this.keyVal].default.push({
-    						id: id,
-    						name: name
-    					})
+        				if(obj[this.keyVal].default.length){
+        					let n = true;
+	        				obj[this.keyVal].default.forEach((list, index) => {
+		        				if(list.id == id){
+		        					n = false;
+		        				}
+		        			});
+
+		        			n && obj[this.keyVal].default.push({
+	    						id: id,
+	    						name: name
+	    					})
+	        			}else{
+	        				obj[this.keyVal].default.push({
+	    						id: id,
+	    						name: name
+	    					})
+	        			}
 	        		})
         		}else if(type == 'remove'){
         			this.$emit('updateData', (obj) => {
@@ -118,14 +133,36 @@
 					btn: '确定',
 					shade: 0.3,
 					skin: 'layui-layer-molv',
+					maxWidth: 500,
+					id: `SELECTPOP${this.keyVal}`,
 					content: `
-						<ul class="checkbox-pop">
-							${oLi}
-						</ul>
+						<div class="checkbox-pop">
+							<ul>
+								${oLi}
+							</ul>
+						</div>
 					`
-				}, () => {
-					alert(1)
 				});
+
+				// 显示全选
+				if(this.allSelect){
+					$(`#SELECTPOP${this.keyVal}`).after(`
+						<a href="javascript:;" id="allSelect${this.keyVal}" class="all-select">
+							<i class="checkbox-icon admin-icon"></i>
+							<span>全选</span>
+						</a>
+					`);
+				}
+
+				// 全选选中
+				let allHandle = () => {
+					if($(`.${this.keyVal}_checkbox_list`).length == $(`.${this.keyVal}_checkbox_list.active`).length){
+						$(`#allSelect${this.keyVal}`).addClass('active');
+					}else{
+						$(`#allSelect${this.keyVal}`).removeClass('active');
+					}
+				}
+				allHandle();
 
 				if(!this.selectCheckbox){
 					this.selectCheckbox = true;
@@ -139,6 +176,24 @@
 							$(this).addClass('active');
 							_this.saveData($(this).attr('id'), $(this).attr('name'), 'add');
 						}
+						allHandle();
+					});
+
+					// 全选
+					$(document).on('click', `#allSelect${this.keyVal}`, function(){
+						if($(this).hasClass('active')){
+							$(this).removeClass('active');
+							$(`.${_this.keyVal}_checkbox_list`).each(function(){
+								$(this).removeClass('active');
+								_this.saveData($(this).attr('id'), $(this).attr('name'), 'remove');
+							});
+						}else{
+							$(this).addClass('active');
+							$(`.${_this.keyVal}_checkbox_list`).each(function(){
+								$(this).addClass('active');
+								_this.saveData($(this).attr('id'), $(this).attr('name'), 'add');
+							});
+						}
 					});
 				}
         	}
@@ -147,7 +202,33 @@
 </script>
 
 <style lang="scss">
+	.all-select {
+		position: absolute !important;
+		bottom: -5px;
+		left: 0;
+		color: #919599;
+		padding: 20px;
+		font-size: 16px;
+
+		i, span {
+			display: inline-block;
+			vertical-align: middle;
+		}
+		i {
+			width: 24px;
+			height: 22px;
+			background-position: -89px -169px;
+		}
+		&.active,
+		&:hover {
+			color: #e15868;
+			i {
+				background-position: -49px -169px;
+			}
+		}
+	}
 	.checkbox-pop {
+		position: relative;
 		max-width: 700px;
 		padding: 20px;
 		padding-bottom: 10px;

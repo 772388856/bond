@@ -17,7 +17,12 @@
 						]"
 						@click="openText(type == 'combination' && (key == 'date' || key == 'reason'), item)"
 					>
-						{{ item | strLength }}
+						<template v-if="long">
+							{{ item | strLength }}
+						</template>
+						<template v-else>
+							{{ item }}
+						</template>
 					</td>
 
 					<td v-if="modify">
@@ -66,7 +71,7 @@
 	import {stateHandle} from '../../../config/tool';
 
     export default {
-    	props: ['title','lists','showDel','countNum','page', 'modify', 'search', 'type', 'modifyText', 'radioAll'],
+    	props: ['title','lists','showDel','countNum','page', 'modify', 'search', 'type', 'modifyText', 'radioAll', 'long'],
        	data(){
        		return {
        			indexs: []
@@ -249,6 +254,7 @@
 			height: 56px;
 			border-bottom: 1px solid #ebecf2;
 			padding: 10px 10px;
+			min-width: 80px;
 		}
 		thead {
 			td {

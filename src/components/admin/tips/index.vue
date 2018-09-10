@@ -14,7 +14,7 @@
 				</div>
 			</div>
 			<my-table 
-				:title="['基金提示id', '基金代码', '基金名称', '提示种类id', '提示种类名称', '提示内容', '提示日期']" 
+				:title="['基金代码', '基金名称', '提示种类id', '提示种类名称', '提示内容', '提示日期']" 
 				:lists="prompt | dataSort"
 				:countNum="countNum"
 				:page="page"
@@ -60,7 +60,6 @@
         		const newData = [];
         		lists.forEach((list, index) => {
         			newData.push({
-        				id: list.id,
         				fundCode: list.fundCode,
         				fundName: list.fundName,
         				typeId: list.typeId,
@@ -147,7 +146,7 @@
 					time: 0
 				});
 
-				idArr.push(obj.id);
+				idArr.push(this.prompt[inx].id);
 
 				str.status = obj.operationVal == '1' ? '0' : '1';
 				str.id = idArr;
@@ -212,11 +211,3 @@
 		}
     }
 </script>
-
-<style lang="scss">
-	.tips_inner {
-		table {
-			table-layout: fixed;
-		}
-	}
-</style>

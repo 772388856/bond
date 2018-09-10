@@ -33,6 +33,12 @@ export const preferfunds = data => fetch('/web/preferfunds', data);
 // 优选基金 （删除基金）
 export const deletePreferfunds = code => fetch(`/web/preferfund/${code}`, {}, 'DELETE');
 
+// 优选基金 （下载）
+export const preferfundDownload = `${baseUrl}/web/preferfund/download`;
+
+// 优选基金 （代销基金下载）
+export const preferfundSaleDownload = `${baseUrl}/web/preferfund/sale/download`;
+
 
 
 // 基金组合管理 （初始化）

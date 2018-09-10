@@ -23,8 +23,8 @@
 		<div class="admin-box" v-if="view">
 			<box-title title="筛选搜索"></box-title>
 			<div class="condition-item">
-				<my-select text="二级基金分类" keyVal="fundType" :lists="fundType" @updateData="updateData" :checkbox="true" type="code"></my-select>
-				<my-select text="基金公司信息" keyVal="company" :lists="company" @updateData="updateData" :checkbox="true" type="code"></my-select>
+				<my-select text="二级基金分类" keyVal="fundType" :lists="fundType" @updateData="updateData" :checkbox="true" type="code" :allSelect="true"></my-select>
+				<my-select text="基金公司信息" keyVal="company" :lists="company" @updateData="updateData" :checkbox="true" type="code" :allSelect="true"></my-select>
 				<a href="javascript:;" class="condition-search" @click="filterHandle">
 					<i class="admin-icon"></i>
 				</a>

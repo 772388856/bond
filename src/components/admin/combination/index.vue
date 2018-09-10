@@ -18,6 +18,12 @@
 					<i class="icon-3 icon admin-icon"></i>
 				</div>
 			</a>
+			<a :href="preferfundSaleDownload" class="item-3 item fl" v-if="view">
+				<div>代销基金下载</div>
+				<div class="icon-box">
+					<i class="icon-3 icon admin-icon"></i>
+				</div>
+			</a>
 		</div>
 
 		<div class="admin-box" v-if="view">
@@ -57,6 +63,7 @@
 				:modify="view"
 				:search="true"
 				type="combination"
+				:long="true"
 			></my-table>
 		</div>
 	</div>
@@ -69,7 +76,7 @@
 	import boxTitle from '../common/boxTitle'
 	import mySelect from '../common/select'
 	import myTable from '../common/table'
-	import {fundgroupCondition, fundgroups, fundgroupsUpload, fundgroupsDownload} from '../../../api/getData';
+	import {fundgroupCondition, fundgroups, fundgroupsUpload, fundgroupsDownload, preferfundSaleDownload} from '../../../api/getData';
 	import {stateHandle} from '../../../config/tool';
 
     export default {
@@ -94,7 +101,8 @@
         		fundgroupData: [],
         		modify: false,
         		view: false,
-        		fundgroupsDownload: fundgroupsDownload
+        		fundgroupsDownload: fundgroupsDownload,
+        		preferfundSaleDownload: preferfundSaleDownload
         	}
         },
         filters: {

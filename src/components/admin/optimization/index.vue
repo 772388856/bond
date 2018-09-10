@@ -2,6 +2,15 @@
 	<div v-if="!load">
 		<top-title>优选基金池特点</top-title>
 
+		<div class="top-label clearfix" v-if="view">
+			<a :href="preferfundDownload" class="item-3 item fl">
+				<div>优选基金下载</div>
+				<div class="icon-box">
+					<i class="icon-3 icon admin-icon"></i>
+				</div>
+			</a>
+		</div>
+
 		<top-text v-if="original.scala.length || original.value.length || original.topic.length">
 			本次优选级基金池的参数为：
 			<template v-if="original.scala.length">
@@ -35,7 +44,7 @@
 			<div class="condition-item">
 				<my-select text="规模风格" keyVal="scala" :lists="scala" @updateData="updateData" :checkbox="true"></my-select>
 				<my-select text="价值风格" keyVal="value" :lists="value" @updateData="updateData" :checkbox="true"></my-select>
-				<my-select text="热门主题" keyVal="topic" :lists="topic" @updateData="updateData" :checkbox="true"></my-select>
+				<my-select text="热门主题" keyVal="topic" :lists="topic" @updateData="updateData" :checkbox="true" :allSelect="true"></my-select>
 				<a href="javascript:;" class="condition-reset" @click="setPreferfund">设置</a>
 				<a href="javascript:;" class="condition-reset" @click="reset">重置所有条件</a>
 			</div>
@@ -71,7 +80,7 @@
 	import boxTitle from '../common/boxTitle'
 	import mySelect from '../common/select'
 	import myTable from '../common/table'
-	import {preferfundCondition, preferfundSelect, preferfunds, deletePreferfunds, preferfundConditionSet} from '../../../api/getData';
+	import {preferfundCondition, preferfundSelect, preferfunds, deletePreferfunds, preferfundConditionSet, preferfundDownload} from '../../../api/getData';
 	import {stateHandle} from '../../../config/tool';
 
     export default {
@@ -104,7 +113,8 @@
         		countNum: 0,
         		count: 0,
         		modify: false,
-        		view: false
+        		view: false,
+        		preferfundDownload: preferfundDownload
         	}
         },
         filters: {
