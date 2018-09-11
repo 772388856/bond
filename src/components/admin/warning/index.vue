@@ -14,7 +14,7 @@
 				</div>
 			</div>
 			<my-table 
-				:title="['基金组合代码', '组合名称', '基金代码', '基金名称', '提示种类id', '提示种类名称', '提示内容', '提示日期']" 
+				:title="['基金组合代码', '组合名称', '基金代码', '基金名称', '基金比例', '提示种类id', '提示种类名称', '提示内容', '提示日期']" 
 				:lists="prompt | dataSort"
 				:countNum="countNum"
 				:page="page"
@@ -64,6 +64,7 @@
         				groupName: list.groupName,
         				fundCode: list.fundCode,
         				fundName: list.fundName,
+        				fundProportion: list.fundProportion,
         				typeId: list.typeId,
         				typeName: list.typeName,
         				content: list.content,
