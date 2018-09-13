@@ -59,12 +59,14 @@
 
         		const newData = [];
         		lists.forEach((list, index) => {
+        			let n = window.accMul(list.fundProportion, 100);
+
         			newData.push({
         				groupCode: list.groupCode,
         				groupName: list.groupName,
         				fundCode: list.fundCode,
         				fundName: list.fundName,
-        				fundProportion: list.fundProportion,
+        				fundProportion: n ? (n + '%') : n,
         				typeId: list.typeId,
         				typeName: list.typeName,
         				content: list.content,

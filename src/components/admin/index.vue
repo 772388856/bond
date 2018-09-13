@@ -47,6 +47,14 @@
 	import {fundgroupAlert, logout} from '../../api/getData';
 	import {stateHandle} from '../../config/tool';
 
+	window.accMul = function(arg1,arg2){
+		if(Object.prototype.toString.call(arg1) != '[object Number]' || Object.prototype.toString.call(arg2) != '[object Number]') return arg1;
+		var m=0,s1=arg1.toString(),s2=arg2.toString();
+		try{m+=s1.split(".")[1].length}catch(e){}
+		try{m+=s2.split(".")[1].length}catch(e){}
+		return Number(s1.replace(".",""))*Number(s2.replace(".",""))/Math.pow(10,m)
+	}
+
     export default {
         name: 'admin',
         data(){
